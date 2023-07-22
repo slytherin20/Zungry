@@ -1,0 +1,11 @@
+node_modules
+.babelrc
+.eslintrc.json
+.postcssrc.json
+.prettierrc
+api_endpoint.js
+tailwind.config.js
+jest.config.js
+coverage
+.parcel-cache
+dist
