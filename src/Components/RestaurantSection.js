@@ -1,4 +1,4 @@
-import { ARROW } from "../../constants";
+import { ARROW } from "../utils/constants";
 import DishCard from "./DishCard";
 import NestedRestaurantSection from "./NestedRestaurantSection";
 export default function RestaurantSection({

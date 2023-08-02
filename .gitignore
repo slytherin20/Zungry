@@ -1,7 +1,6 @@
 node_modules
 .eslintrc.json
 .prettierrc
-api_endpoint.js
 coverage
 .parcel-cache
 dist

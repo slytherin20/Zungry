@@ -10,20 +10,17 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-//import AboutUs from "./AboutUs";
 import ContactUs from "./ContactUs";
 import RouteError from "./RouteError";
 import RestaurantDetails from "./RestaurantDetails";
 import LoginForm from "./LoginForm";
-import AboutClass from "./AboutClass";
-import ProfileClass from "./ProfileClass";
-import SettingsClass from "./SettingsClass";
 import useOnline from "../utils/useOnline";
 import OfflinePage from "./OfflinePage";
 import SignUp from "./SignUp";
 import { Provider } from "react-redux";
 import store from "../Store/store";
 import Cart from "./Cart";
+
 function AppLayout() {
   const [searchVal, setSearchVal] = useState("");
   const navigate = useNavigate();
@@ -51,20 +48,6 @@ const appRouter = createBrowserRouter([
       {
         path: "/",
         element: <Body />,
-      },
-      {
-        path: "about",
-        element: <AboutClass />,
-        children: [
-          {
-            path: "profile",
-            element: <ProfileClass />,
-          },
-          {
-            path: "settings",
-            element: <SettingsClass />,
-          },
-        ],
       },
       {
         path: "contact",

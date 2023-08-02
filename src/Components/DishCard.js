@@ -3,7 +3,7 @@ import {
   NONVEG_LOGO,
   NOPHOTO,
   VEG_LOGO,
-} from "../../constants";
+} from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addItem,

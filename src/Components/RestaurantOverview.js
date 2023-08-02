@@ -1,5 +1,5 @@
-import { STAR_ICON } from "../../constants.js";
-import { CLOUDANARY_API } from "../../constants";
+import { STAR_ICON } from "../utils/constants";
+import { CLOUDANARY_API } from "../utils/constants";
 export default function RestaurantOverview({
   name,
   cuisine,

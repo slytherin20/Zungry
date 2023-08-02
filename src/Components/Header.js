@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { CART_ICON, USER_ICON, FOOD_LOGO, SEARCH_ICON } from "../../constants";
+import {
+  CART_ICON,
+  USER_ICON,
+  FOOD_LOGO,
+  SEARCH_ICON,
+} from "../utils/constants";
 export default function Header({ searchResults }) {
   const [search, setSearch] = useState("");
   const [loginStatus, setLoginStatus] = useState(false);

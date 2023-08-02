@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { CLOSE_BTN } from "../../constants";
+import { CLOSE_BTN } from "../utils/constants";
 import {
   addItem,
   cartRestaurant,

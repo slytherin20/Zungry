@@ -4,11 +4,12 @@ import RestaurantDetailsShimmer from "./RestaurantDetailsShimmer";
 import useRestaurantMenu from "../utils/useRestaurantMenu.js";
 import RestaurantSection from "./RestaurantSection";
 import { useState, useEffect } from "react";
-
+import useUserLocation from "../utils/useUserLocation";
 export default function RestaurantDetails() {
   const [isVisible, setIsVisible] = useState({});
+  const userLocation = useUserLocation();
   const { id } = useParams();
-  let restaurantDetails = useRestaurantMenu(id);
+  let restaurantDetails = useRestaurantMenu(id, userLocation);
   useEffect(() => {
     restaurantDetails &&
       restaurantDetails[2] &&
@@ -30,8 +31,9 @@ export default function RestaurantDetails() {
   let restaurantInfo = restaurantDetails
     ? restaurantDetails[0]?.card?.card?.info
     : null;
-  let restaurantMenu =
-    restaurantDetails[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards;
+  let restaurantMenu = restaurantDetails
+    ? restaurantDetails[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards
+    : undefined;
   let cuisines = restaurantInfo?.cuisines
     ? restaurantInfo?.cuisines?.join(", ")
     : "";

@@ -5,15 +5,28 @@ import { StaticRouter } from "react-router-dom/server";
 import "@testing-library/jest-dom";
 import Header from "../Components/Header.js";
 import RestaurantList from "../Components/RestaurantList.js";
-import { restaurantDetails } from "../../api_endpoint";
+import { restaurantDetails } from "../utils/api_endpoint";
 global.fetch = jest.fn(() => {
   return Promise.resolve({
     json: () => Promise.resolve(restaurantDetails),
   });
 });
-
+const mockGeolocation = {
+  getCurrentPosition: jest.fn(),
+};
+global.navigator.geolocation = mockGeolocation;
 test("Restaurant should be loaded as per search input", async () => {
   const searchFn = jest.fn((val) => val);
+  let mockPosition = {
+    coords: {
+      latitude: 1.2345,
+      longitude: 5.6789,
+    },
+  };
+
+  mockGeolocation.getCurrentPosition.mockImplementation((success) => {
+    success(mockPosition);
+  });
   const { rerender } = render(
     <StaticRouter>
       <Provider store={store}>
@@ -24,7 +37,7 @@ test("Restaurant should be loaded as per search input", async () => {
   );
   const inp = screen.getByTestId("search-bar");
   const searchBtn = screen.getByTestId("search-btn");
-  let value = "parantha";
+  let value = "burger";
   fireEvent.change(inp, {
     target: {
       value,
@@ -49,5 +62,5 @@ test("Restaurant should be loaded as per search input", async () => {
   });
   const restList = screen.getByTestId("restaurants");
 
-  expect(restList.children.length).toBe(1);
+  expect(restList.children.length).toBe(2);
 });

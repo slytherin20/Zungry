@@ -1,21 +1,21 @@
 import { useState, useEffect } from "react";
-import { SWIGGY_API } from "../../api_endpoint";
 
-export default function useRestaurantList() {
+export default function useRestaurantList(userLocation) {
   const [restaurantsList, setRestaurantsList] = useState([]);
-
   useEffect(() => {
-    getRestaurants();
-  }, []);
+    userLocation.lat && getRestaurants();
+  }, [userLocation.lat]);
 
   async function getRestaurants() {
     try {
-      let res = await fetch(SWIGGY_API);
+      let res = await fetch(
+        `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${userLocation.lat}&lng=${userLocation.long}&page_type=DESKTOP_WEB_LISTING`
+      );
       let restaurantsData = await res.json();
+
       restaurantsData =
-        restaurantsData?.data?.cards[2]?.data?.data?.cards ||
-        restaurantsData?.data?.cards[0]?.data?.data?.cards ||
-        [];
+        restaurantsData?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle
+          ?.restaurants || [];
       setRestaurantsList(restaurantsData);
     } catch (e) {
       console.log(e.message);

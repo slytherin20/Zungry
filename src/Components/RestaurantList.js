@@ -4,10 +4,12 @@ import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import { filterData } from "../utils/helper";
 import useRestaurantList from "../utils/useRestaurantList";
+import useUserLocation from "../utils/useUserLocation";
 
 export default function RestaurantList({ searchInput }) {
   const [filteredList, setFilteredList] = useState([]);
-  let restaurantsList = useRestaurantList();
+  const userLocation = useUserLocation();
+  let restaurantsList = useRestaurantList(userLocation);
 
   useEffect(() => {
     function setFilterData(list) {
@@ -44,10 +46,10 @@ export default function RestaurantList({ searchInput }) {
       >
         {filteredList.map((restaurant) => (
           <Link
-            to={`/restaurants/` + restaurant.data.id}
-            key={restaurant.data.id}
+            to={`/restaurants/` + restaurant.info.id}
+            key={restaurant.info.id}
           >
-            <RestaurantCard details={restaurant.data} />
+            <RestaurantCard details={restaurant.info} />
           </Link>
         ))}
       </div>
