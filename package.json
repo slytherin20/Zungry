@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "jest",
-    "test-watch": "jest --watch",
+    "test": "node -r dotenv/config $(which jest)",
+    "test-watch": "node -r dotenv/config $(which jest) --watchAll",
     "start": "parcel index.html",
     "build": "parcel build index.html"
   },
