@@ -1,10 +1,11 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../../firebase_config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
 export default function SignUp() {
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -53,6 +54,7 @@ export default function SignUp() {
             last: values.lastName,
             email: values.email,
           });
+          return navigate("/");
 
           //    notify("Welcome ", values.firstName + " " + values.lastName);
         } catch (err) {
