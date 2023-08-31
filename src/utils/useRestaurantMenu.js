@@ -2,14 +2,17 @@ import { useState, useEffect } from "react";
 
 export default function useRestaurantMenu(id, userLocation) {
   const [restaurantDetails, setRestaurantDetails] = useState([]);
-
+  let uri =
+    process.env.REACT_APP_ENV == "dev"
+      ? "http://localhost:3000"
+      : "https://zungryproxy.onrender.com";
   useEffect(() => {
     userLocation.lat && getRestaurantDetails();
   }, [userLocation.lat]);
   async function getRestaurantDetails() {
     try {
       let res = await fetch(
-        `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${userLocation.lat}&lng=${userLocation.long}&restaurantId=${id}&catalog_qa=undefined&submitAction=ENTER`
+        `${uri}/api/menu?long=${userLocation.long}&lat=${userLocation.lat}&id=${id}`
       );
       let data = await res.json();
       setRestaurantDetails(data?.data?.cards);
