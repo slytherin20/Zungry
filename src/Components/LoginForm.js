@@ -1,6 +1,9 @@
 import { useFormik } from "formik";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 export default function LoginForm() {
+  const auth = getAuth();
+  const navigate = useNavigate();
   const validate = (values) => {
     let errors = {};
     if (!values.email) errors.email = "*Required";
@@ -18,7 +21,14 @@ export default function LoginForm() {
     },
     validate,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      signInWithEmailAndPassword(auth, values.email, values.password)
+        .then(() => {
+          navigate("/");
+        })
+        .catch((err) => {
+          console.log(err);
+          //notify("error logging in!");
+        });
     },
   });
   return (

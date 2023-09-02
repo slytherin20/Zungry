@@ -20,13 +20,18 @@ import SignUp from "./SignUp";
 import { Provider } from "react-redux";
 import store from "../Store/store";
 import Cart from "./Cart";
-
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 function AppLayout() {
   const [searchVal, setSearchVal] = useState("");
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const isOnline = useOnline();
+  const auth = getAuth();
 
+  onAuthStateChanged(auth, (user) => {
+    if (user) setUser(user.uid);
+  });
   function searchValHandler(val) {
     setSearchVal(val);
     if (location != "/") navigate("/");
@@ -34,7 +39,7 @@ function AppLayout() {
 
   return (
     <Provider store={store}>
-      <Header searchResults={searchValHandler} />
+      <Header searchResults={searchValHandler} user={user} />
       {isOnline ? <Outlet context={searchVal} /> : <OfflinePage />}
       <Footer />
     </Provider>

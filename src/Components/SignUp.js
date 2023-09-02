@@ -1,9 +1,8 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
-import { auth, db } from "../../firebase_config";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore";
+import { auth } from "../../firebase_config";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 export default function SignUp() {
   const navigate = useNavigate();
   const formik = useFormik({
@@ -46,21 +45,13 @@ export default function SignUp() {
 
   function createUser(values) {
     createUserWithEmailAndPassword(auth, values.email, values.password)
-      .then(async () => {
-        const user = auth.currentUser.uid;
-        try {
-          await setDoc(doc(db, "Users", user), {
-            first: values.firstName,
-            last: values.lastName,
-            email: values.email,
-          });
-          return navigate("/");
-
-          //    notify("Welcome ", values.firstName + " " + values.lastName);
-        } catch (err) {
-          //notify("Error adding user details.");
-          console.log(err);
-        }
+      .then(() => {
+        const user = auth.currentUser;
+        updateProfile(user, {
+          displayName: formik.values.firstName + " " + formik.values.lastName,
+        })
+          .then(() => navigate("/"))
+          .catch((err) => console.log(err));
       })
       .catch(() => {
         //  notify("Error creating user. Please try again later.");
