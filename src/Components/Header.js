@@ -31,7 +31,12 @@ export default function Header({ searchResults, user }) {
         <p className="text-2xl sm:text-4xl text-red-600" data-testid="app-name">
           Zungry
         </p>
-        <img src={FOOD_LOGO} className="w-14 h-14" data-testid="app-logo" />
+        <img
+          src={FOOD_LOGO}
+          className="w-14 h-14"
+          data-testid="app-logo"
+          alt="A man in red clothes with red helment riding a scooter for food delivery"
+        />
       </div>
       <div className="h-10 shadow-md rounded-lg flex flex-row items-center w-full sm:w-96">
         <input
@@ -40,6 +45,9 @@ export default function Header({ searchResults, user }) {
           placeholder="Search for a restaurant"
           onChange={changeSearchVal}
           data-testid="search-bar"
+          name="searchbar"
+          id="searchbar"
+          autoComplete="on"
         />
         <img
           src={SEARCH_ICON}

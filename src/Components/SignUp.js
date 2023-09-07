@@ -76,6 +76,7 @@ export default function SignUp() {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               data-testid="first"
+              autoComplete="first-name"
             />
             {formik.touched.firstName && formik.errors.firstName ? (
               <p className="text-red-600" data-testid="firstname-error">
@@ -94,6 +95,7 @@ export default function SignUp() {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               data-testid="last"
+              autoComplete="name"
             />
             {formik.touched.lastName && formik.errors.lastName ? (
               <p className="text-red-600" data-testid="lastname-error">
@@ -112,6 +114,7 @@ export default function SignUp() {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           data-testid="email"
+          autoComplete="email"
         />
         {formik.touched.email && formik.errors.email ? (
           <p className="text-red-600" data-testid="email-error">
@@ -128,6 +131,7 @@ export default function SignUp() {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           data-testid="password"
+          autoComplete="off"
         />
         {formik.touched.password && formik.errors.password ? (
           <p className="text-red-600" data-testid="password-error">
@@ -144,6 +148,7 @@ export default function SignUp() {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           data-testid="repassword"
+          autoComplete="off"
         />
         {formik.touched.reenterPassword && formik.errors.reenterPassword ? (
           <p className="text-red-600" data-testid="repassword-error">

@@ -54,6 +54,7 @@ export default function LoginForm() {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           data-testid="email"
+          autoComplete="email"
         />
         {formik.touched.email && formik.errors.email ? (
           <p className="text-red-600" data-testid="email-error">
@@ -71,6 +72,7 @@ export default function LoginForm() {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           data-testid="password"
+          autoComplete="current-password"
         />
         {formik.touched.password && formik.errors.password ? (
           <p className="text-red-600" data-testid="password-error">
