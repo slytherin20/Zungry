@@ -5,6 +5,17 @@ import { fireEvent, render } from "@testing-library/react";
 import DishCard from "../Components/DishCard";
 import { customDish } from "../Dummy/dishWithCustom";
 import { info } from "../Dummy/restaurantInfo";
+
+jest.mock("firebase/auth", () => {
+  return {
+    getAuth: jest.fn().mockReturnValue({
+      currentUser: {
+        uid: "123456xwtre",
+      },
+    }),
+  };
+});
+
 import Header from "../Components/Header";
 
 describe("Cart functionality for dishes with customization options", () => {

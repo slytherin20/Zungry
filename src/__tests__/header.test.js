@@ -1,4 +1,13 @@
 const { render } = require("@testing-library/react");
+jest.mock("firebase/auth", () => {
+  return {
+    getAuth: jest.fn().mockReturnValue({
+      currentUser: {
+        uid: "123456xwtre",
+      },
+    }),
+  };
+});
 import Header from "../Components/Header.js";
 import { Provider } from "react-redux";
 import store from "../Store/store.js";

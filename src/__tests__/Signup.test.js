@@ -2,11 +2,31 @@ import { StaticRouter } from "react-router-dom/server";
 import { Provider } from "react-redux";
 import store from "../Store/store";
 import { fireEvent, render, waitFor } from "@testing-library/react";
-import SignUp from "../Components/SignUp";
+import * as router from "react-router";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  getAuth,
+} from "firebase/auth";
 import "@testing-library/jest-dom";
+jest.mock("firebase/auth", () => {
+  return {
+    getAuth: jest.fn().mockReturnValue({
+      currentUser: {
+        uid: "123456xwtre",
+      },
+    }),
+    createUserWithEmailAndPassword: jest.fn(() => {
+      return Promise.resolve();
+    }),
+    updateProfile: jest.fn(() => {
+      return Promise.resolve();
+    }),
+  };
+});
+jest.spyOn(router, "useNavigate").mockImplementation(() => jest.fn());
+import SignUp from "../Components/SignUp";
 
-// const mockCreateUserWithEmailAndPassword = jest.fn(() => new Promise.resolve());
-// global.createUserWithEmailAndPassword = mockCreateUserWithEmailAndPassword;
 describe("Signup page", () => {
   test("Signup is loading correctly", () => {
     let signup = render(
@@ -239,6 +259,77 @@ describe("Signup page", () => {
     await waitFor(() => {
       const reenterPasswordErr = page.getByTestId("repassword-error");
       expect(reenterPasswordErr.innerHTML).toBe("Passwords must match");
+    });
+  });
+
+  test("Submit function is working correctly", async () => {
+    let signup = render(
+      <StaticRouter>
+        <Provider store={store}>
+          <SignUp />
+        </Provider>
+      </StaticRouter>
+    );
+
+    let firstName = signup.getByTestId("first");
+    let lastName = signup.getByTestId("last");
+    let email = signup.getByTestId("email");
+    let password = signup.getByTestId("password");
+    let reenterPassword = signup.getByTestId("repassword");
+    fireEvent.change(firstName, {
+      target: {
+        value: "John",
+      },
+    });
+    fireEvent.blur(firstName);
+    fireEvent.change(lastName, {
+      target: {
+        value: "Doe",
+      },
+    });
+    fireEvent.blur(lastName);
+    fireEvent.change(email, {
+      target: {
+        value: "john.doe@gmail.com",
+      },
+    });
+    fireEvent.blur(email);
+    fireEvent.change(password, {
+      target: {
+        value: "John.doe8@8",
+      },
+    });
+    fireEvent.blur(password);
+    fireEvent.change(reenterPassword, {
+      target: {
+        value: "John.doe8@8",
+      },
+    });
+    fireEvent.blur(reenterPassword);
+    let submitBtn = signup.getByTestId("signup-btn");
+
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(createUserWithEmailAndPassword).toBeCalledWith(
+        {
+          currentUser: {
+            uid: "123456xwtre",
+          },
+        },
+        "john.doe@gmail.com",
+        "John.doe8@8"
+      );
+      expect(createUserWithEmailAndPassword).toHaveBeenCalledTimes(1);
+      expect(updateProfile).toHaveBeenCalledWith(
+        {
+          uid: "123456xwtre",
+        },
+        {
+          displayName: "John Doe",
+        }
+      );
+      expect(updateProfile).toHaveBeenCalledTimes(1);
     });
   });
 });

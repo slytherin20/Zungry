@@ -4,6 +4,15 @@ import store from "../Store/store";
 import { fireEvent, render } from "@testing-library/react";
 import DishCard from "../Components/DishCard";
 import { dishWithoutCustom } from "../Dummy/DishNoCustomization.js";
+jest.mock("firebase/auth", () => {
+  return {
+    getAuth: jest.fn().mockReturnValue({
+      currentUser: {
+        uid: "123456xwtre",
+      },
+    }),
+  };
+});
 import Header from "../Components/Header";
 describe("Checking Dish Card Layout", () => {
   test("All dish card elements are present", () => {
