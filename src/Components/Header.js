@@ -70,13 +70,15 @@ export default function Header({ searchResults, user }) {
         {user ? (
           <>
             <img src={USER_ICON} width="40" height="40" />
-            <button type="button" onClick={logOutHandler}>
+            <button type="button" onClick={logOutHandler} data-testid="Logout">
               Logout
             </button>
           </>
         ) : (
           <Link to="/login">
-            <button type="button">Login</button>
+            <button type="button" data-testid="Login">
+              Login
+            </button>
           </Link>
         )}
       </div>

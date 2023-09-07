@@ -7,11 +7,16 @@ export default function LoginForm() {
   const validate = (values) => {
     let errors = {};
     if (!values.email) errors.email = "*Required";
-    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email))
+    else if (
+      !/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g.test(
+        values.email
+      )
+    ) {
       errors.email = "Invalid E-mail Address";
+    }
     if (!values.password) errors.password = "*Required";
     else if (values.password.length < 8)
-      errors.password = "Must be atleast 8 characters long";
+      errors.password = "Password must be atleast 8 characters long";
     return errors;
   };
   const formik = useFormik({
@@ -48,9 +53,12 @@ export default function LoginForm() {
           value={formik.values.email}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
+          data-testid="email"
         />
         {formik.touched.email && formik.errors.email ? (
-          <p className="text-red-600">{formik.errors.email}</p>
+          <p className="text-red-600" data-testid="email-error">
+            {formik.errors.email}
+          </p>
         ) : null}
         <label htmlFor="password">Password</label>
         <input
@@ -62,11 +70,18 @@ export default function LoginForm() {
           value={formik.values.password}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
+          data-testid="password"
         />
         {formik.touched.password && formik.errors.password ? (
-          <p className="text-red-600">{formik.errors.password}</p>
+          <p className="text-red-600" data-testid="password-error">
+            {formik.errors.password}
+          </p>
         ) : null}
-        <button type="submit" className="bg-red-600 text-white h-8 rounded-md">
+        <button
+          type="submit"
+          className="bg-red-600 text-white h-8 rounded-md"
+          data-testid="login-btn"
+        >
           Login
         </button>
         <Link to="/signup">
