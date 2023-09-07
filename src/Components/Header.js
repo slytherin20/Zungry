@@ -1,21 +1,26 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   CART_ICON,
   USER_ICON,
   FOOD_LOGO,
   SEARCH_ICON,
 } from "../utils/constants";
-export default function Header({ searchResults }) {
+import { getAuth } from "firebase/auth";
+
+export default function Header({ searchResults, user }) {
   const [search, setSearch] = useState("");
-  const [loginStatus, setLoginStatus] = useState(false);
   const cartItems = useSelector((store) => store.cart.items);
+  const auth = getAuth();
+  const navigate = useNavigate();
   function changeSearchVal(e) {
     setSearch(e.target.value);
   }
-  function changeLoginStatus() {
-    setLoginStatus(!loginStatus);
+
+  function logOutHandler() {
+    auth.signOut();
+    navigate("/login");
   }
   return (
     <div
@@ -62,16 +67,16 @@ export default function Header({ searchResults }) {
             <span data-testid="cart-count">{cartItems.length}</span>
           </div>
         </Link>
-        {loginStatus ? (
+        {user ? (
           <>
             <img src={USER_ICON} width="40" height="40" />
-            <button type="button" onClick={changeLoginStatus}>
+            <button type="button" onClick={logOutHandler} data-testid="Logout">
               Logout
             </button>
           </>
         ) : (
           <Link to="/login">
-            <button type="button" onClick={changeLoginStatus}>
+            <button type="button" data-testid="Login">
               Login
             </button>
           </Link>

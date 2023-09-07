@@ -3,6 +3,15 @@ import { Provider } from "react-redux";
 import store from "../Store/store";
 import { StaticRouter } from "react-router-dom/server";
 import "@testing-library/jest-dom";
+jest.mock("firebase/auth", () => {
+  return {
+    getAuth: jest.fn().mockReturnValue({
+      currentUser: {
+        uid: "123456xwtre",
+      },
+    }),
+  };
+});
 import Header from "../Components/Header.js";
 import RestaurantList from "../Components/RestaurantList.js";
 import { restaurantDetails } from "../utils/api_endpoint";

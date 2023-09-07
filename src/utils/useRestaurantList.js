@@ -7,9 +7,13 @@ export default function useRestaurantList(userLocation) {
   }, [userLocation.lat]);
 
   async function getRestaurants() {
+    let uri =
+      process.env.REACT_APP_ENV == "dev"
+        ? "http://localhost:3000"
+        : "https://zungryproxy.onrender.com";
     try {
       let res = await fetch(
-        `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${userLocation.lat}&lng=${userLocation.long}&page_type=DESKTOP_WEB_LISTING`
+        `${uri}/api/restaurants?lat=${userLocation.lat}&long=${userLocation.long}`
       );
       let restaurantsData = await res.json();
 
