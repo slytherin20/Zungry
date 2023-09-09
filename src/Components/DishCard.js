@@ -130,7 +130,7 @@ export default function DishCard({ dish, restaurantInfo }) {
             alt="food"
             width="150"
             height="150"
-            className="w-36 h-30"
+            className="w-36 h-36"
             data-testid="dish-img"
           />
         ) : (
@@ -139,7 +139,7 @@ export default function DishCard({ dish, restaurantInfo }) {
             alt="picture not available"
             width="150"
             height="150"
-            className="w-36 h-30"
+            className="w-36 h-36"
             data-testid="dish-img"
           />
         )}
