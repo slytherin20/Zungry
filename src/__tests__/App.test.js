@@ -25,58 +25,85 @@ const mockGeolocation = {
   getCurrentPosition: jest.fn(),
 };
 global.navigator.geolocation = mockGeolocation;
-test("Restaurant should be loaded as per search input", async () => {
-  const searchFn = jest.fn((val) => val);
-  let mockPosition = {
-    coords: {
-      lat: 1.2345,
-      long: 5.6789,
-    },
-  };
+const searchFn = jest.fn((val) => val);
+let mockPosition = {
+  coords: {
+    lat: 1.2345,
+    long: 5.6789,
+  },
+};
 
-  mockGeolocation.getCurrentPosition.mockImplementation((success) => {
-    success(mockPosition);
+describe("The landing page", () => {
+  test("The landing page should load corectly", async () => {
+    mockGeolocation.getCurrentPosition.mockImplementation((success) => {
+      success(mockPosition);
+    });
+    const page = render(
+      <StaticRouter>
+        <Provider store={store}>
+          <UserLocationContext.Provider value={mockPosition.coords}>
+            <Header searchResults={searchFn} />
+            <RestaurantList searchInput="" />
+          </UserLocationContext.Provider>
+        </Provider>
+      </StaticRouter>
+    );
+    expect(page.getByTestId("header")).toBeInTheDocument();
+    const shimmer = page.getByTestId("homepage-shimmer");
+    expect(shimmer).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(page.getByTestId("restaurants")).toBeInTheDocument();
+    });
+    const restList = page.getByTestId("restaurants");
+
+    expect(restList.children.length).toBe(20);
   });
+  test("Restaurant should be loaded as per search input", async () => {
+    mockGeolocation.getCurrentPosition.mockImplementation((success) => {
+      success(mockPosition);
+    });
 
-  const { rerender } = render(
-    <StaticRouter>
-      <Provider store={store}>
-        <UserLocationContext.Provider value={mockPosition.coords}>
-          <Header searchResults={searchFn} />
-          <RestaurantList searchInput="" />
-        </UserLocationContext.Provider>
-      </Provider>
-    </StaticRouter>
-  );
-  const inp = screen.getByTestId("search-bar");
-  const searchBtn = screen.getByTestId("search-btn");
-  let value = "burger";
-  fireEvent.change(inp, {
-    target: {
-      value,
-    },
+    const { rerender } = render(
+      <StaticRouter>
+        <Provider store={store}>
+          <UserLocationContext.Provider value={mockPosition.coords}>
+            <Header searchResults={searchFn} />
+            <RestaurantList searchInput="" />
+          </UserLocationContext.Provider>
+        </Provider>
+      </StaticRouter>
+    );
+    const inp = screen.getByTestId("search-bar");
+    const searchBtn = screen.getByTestId("search-btn");
+    let value = "burger";
+    fireEvent.change(inp, {
+      target: {
+        value,
+      },
+    });
+
+    fireEvent.click(searchBtn);
+
+    rerender(
+      <StaticRouter>
+        <Provider store={store}>
+          <UserLocationContext.Provider value={mockPosition.coords}>
+            <Header searchResults={searchFn} />
+            <RestaurantList searchInput={value} />
+          </UserLocationContext.Provider>
+        </Provider>
+      </StaticRouter>
+    );
+
+    const shimmer = screen.getByTestId("homepage-shimmer");
+    expect(shimmer).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.getByTestId("restaurants"));
+    });
+    const restList = screen.getByTestId("restaurants");
+
+    expect(restList.children.length).toBe(2);
   });
-
-  fireEvent.click(searchBtn);
-
-  rerender(
-    <StaticRouter>
-      <Provider store={store}>
-        <UserLocationContext.Provider value={mockPosition.coords}>
-          <Header searchResults={searchFn} />
-          <RestaurantList searchInput={value} />
-        </UserLocationContext.Provider>
-      </Provider>
-    </StaticRouter>
-  );
-
-  const shimmer = screen.getByTestId("homepage-shimmer");
-  expect(shimmer).toBeInTheDocument();
-
-  await waitFor(() => {
-    expect(screen.getByTestId("restaurants"));
-  });
-  const restList = screen.getByTestId("restaurants");
-
-  expect(restList.children.length).toBe(2);
 });
