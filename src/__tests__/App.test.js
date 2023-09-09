@@ -15,6 +15,7 @@ jest.mock("firebase/auth", () => {
 import Header from "../Components/Header.js";
 import RestaurantList from "../Components/RestaurantList.js";
 import { restaurantDetails } from "../utils/api_endpoint";
+import { UserLocationContext } from "../utils/UserLocationContext";
 global.fetch = jest.fn(() => {
   return Promise.resolve({
     json: () => Promise.resolve(restaurantDetails),
@@ -28,19 +29,22 @@ test("Restaurant should be loaded as per search input", async () => {
   const searchFn = jest.fn((val) => val);
   let mockPosition = {
     coords: {
-      latitude: 1.2345,
-      longitude: 5.6789,
+      lat: 1.2345,
+      long: 5.6789,
     },
   };
 
   mockGeolocation.getCurrentPosition.mockImplementation((success) => {
     success(mockPosition);
   });
+
   const { rerender } = render(
     <StaticRouter>
       <Provider store={store}>
-        <Header searchResults={searchFn} />
-        <RestaurantList searchInput="" />
+        <UserLocationContext.Provider value={mockPosition.coords}>
+          <Header searchResults={searchFn} />
+          <RestaurantList searchInput="" />
+        </UserLocationContext.Provider>
       </Provider>
     </StaticRouter>
   );
@@ -58,14 +62,17 @@ test("Restaurant should be loaded as per search input", async () => {
   rerender(
     <StaticRouter>
       <Provider store={store}>
-        <Header searchResults={searchFn} />
-        <RestaurantList searchInput={value} />
+        <UserLocationContext.Provider value={mockPosition.coords}>
+          <Header searchResults={searchFn} />
+          <RestaurantList searchInput={value} />
+        </UserLocationContext.Provider>
       </Provider>
     </StaticRouter>
   );
 
   const shimmer = screen.getByTestId("homepage-shimmer");
   expect(shimmer).toBeInTheDocument();
+
   await waitFor(() => {
     expect(screen.getByTestId("restaurants"));
   });

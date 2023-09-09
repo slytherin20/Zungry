@@ -9,6 +9,7 @@ import { UserLocationContext } from "../utils/UserLocationContext";
 export default function RestaurantList({ searchInput }) {
   const [filteredList, setFilteredList] = useState([]);
   const userLocation = useContext(UserLocationContext);
+
   let restaurantsList = useRestaurantList(userLocation);
 
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function RestaurantList({ searchInput }) {
         </div>
       </div>
     );
+
   if (filteredList.length === 0) return <h3>No restaurants found</h3>;
   return (
     <div className="m-2 sm:m-11">

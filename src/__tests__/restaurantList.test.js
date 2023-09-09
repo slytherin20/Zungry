@@ -5,6 +5,7 @@ import { render, waitFor } from "@testing-library/react";
 import { restaurantDetails } from "../utils/api_endpoint";
 import "@testing-library/jest-dom";
 import RestaurantList from "../Components/RestaurantList";
+import { UserLocationContext } from "../utils/UserLocationContext";
 
 global.fetch = jest.fn(() => {
   return Promise.resolve({
@@ -19,8 +20,8 @@ global.navigator.geolocation = mockGeolocation;
 test("Restaurants should be loaded", async () => {
   const mockPostion = {
     coords: {
-      latitude: 1.2345,
-      longitude: 5.6789,
+      lat: 1.2345,
+      long: 5.6789,
     },
   };
   mockGeolocation.getCurrentPosition.mockImplementation((success) =>
@@ -29,7 +30,9 @@ test("Restaurants should be loaded", async () => {
   const body = render(
     <StaticRouter>
       <Provider store={store}>
-        <RestaurantList searchInput="" />
+        <UserLocationContext.Provider value={mockPostion.coords}>
+          <RestaurantList searchInput="" />
+        </UserLocationContext.Provider>
       </Provider>
     </StaticRouter>
   );
