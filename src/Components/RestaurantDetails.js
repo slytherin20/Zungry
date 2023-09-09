@@ -3,11 +3,12 @@ import RestaurantOverview from "./RestaurantOverview";
 import RestaurantDetailsShimmer from "./RestaurantDetailsShimmer";
 import useRestaurantMenu from "../utils/useRestaurantMenu.js";
 import RestaurantSection from "./RestaurantSection";
-import { useState, useEffect } from "react";
-import useUserLocation from "../utils/useUserLocation";
+import { useState, useEffect, useContext } from "react";
+import { UserLocationContext } from "../utils/UserLocationContext";
+
 export default function RestaurantDetails() {
   const [isVisible, setIsVisible] = useState({});
-  const userLocation = useUserLocation();
+  const userLocation = useContext(UserLocationContext);
   const { id } = useParams();
   let restaurantDetails = useRestaurantMenu(id, userLocation);
   useEffect(() => {

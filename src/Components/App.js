@@ -21,6 +21,8 @@ import { Provider } from "react-redux";
 import store from "../Store/store";
 import Cart from "./Cart";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import useUserLocation from "../utils/useUserLocation";
+import { UserLocationContext } from "../utils/UserLocationContext";
 function AppLayout() {
   const [searchVal, setSearchVal] = useState("");
   const [user, setUser] = useState(null);
@@ -28,7 +30,7 @@ function AppLayout() {
   const location = useLocation();
   const isOnline = useOnline();
   const auth = getAuth();
-
+  const userLocation = useUserLocation();
   onAuthStateChanged(auth, (user) => {
     if (user) setUser(user.uid);
   });
@@ -39,9 +41,11 @@ function AppLayout() {
 
   return (
     <Provider store={store}>
-      <Header searchResults={searchValHandler} user={user} />
-      {isOnline ? <Outlet context={searchVal} /> : <OfflinePage />}
-      <Footer />
+      <UserLocationContext.Provider value={userLocation}>
+        <Header searchResults={searchValHandler} user={user} />
+        {isOnline ? <Outlet context={searchVal} /> : <OfflinePage />}
+        <Footer />
+      </UserLocationContext.Provider>
     </Provider>
   );
 }
