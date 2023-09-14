@@ -8,7 +8,7 @@ export function addFoodItem(state, action) {
 export function removeFoodItem(state, action) {
   let items = state.items.map((item) => {
     if (item.id == action.payload) {
-      if (item.selectedQty != 1) {
+      if (item.selectedQty > 1) {
         return {
           ...item,
           selectedQty: item.selectedQty - 1,

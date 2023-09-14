@@ -18,10 +18,21 @@ import { useState } from "react";
 import Customizations from "./Customizations";
 import { useEffect } from "react";
 import { countSize } from "../utils/helper";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  addItemToStorage,
+  removeCustomItemFromStorage,
+  removeItemFromStorage,
+} from "../utils/localStorageItemHelpers";
 
 export default function DishCard({ dish, restaurantInfo }) {
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [count, setCount] = useState(0);
+  const [user, setUser] = useState(null);
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) setUser(user.uid);
+  });
   let sizeVariations = dish?.variantsV2?.variantGroups
     ? dish?.variantsV2.variantGroups[0]?.variations
     : null;
@@ -39,7 +50,7 @@ export default function DishCard({ dish, restaurantInfo }) {
         } else {
           setCount(item.selectedQty);
         }
-      }
+      } else setCount(0);
     } else setCount(0);
   }, [cartItems]);
 
@@ -47,6 +58,12 @@ export default function DishCard({ dish, restaurantInfo }) {
     if (sizeVariations) {
       toggleModal();
     } else {
+      //Add to localstorage without customization
+      if (!user) {
+        //Set items and restaurant in local storage
+        addItemToStorage(item, restaurantInfo);
+      }
+
       if (count === 0) {
         dispatch(addItem(item));
         dispatch(cartRestaurant(restaurantInfo));
@@ -60,10 +77,15 @@ export default function DishCard({ dish, restaurantInfo }) {
   }
 
   function removeFromCart(id) {
+    //Localstorage added for no customization
+
     let item = cartItems.find((item) => item.id == id);
     if (!item) return;
 
     if (!item.selectedOptions?.size) {
+      if (!user) {
+        removeItemFromStorage(id);
+      }
       dispatch(removeItem(id));
       if (cartItems.length === 1 && item.selectedQty === 1) {
         dispatch(removeRestaurant());
@@ -73,6 +95,7 @@ export default function DishCard({ dish, restaurantInfo }) {
       if (c === 1) {
         dispatch(removeCustomizedItem(id));
         dispatch(removeRestaurant());
+        if (!user) removeCustomItemFromStorage(id);
       } else toggleModal();
     }
   }
@@ -120,6 +143,7 @@ export default function DishCard({ dish, restaurantInfo }) {
                 restaurantInfo={restaurantInfo}
                 count={count}
                 cartItems={cartItems}
+                user={user}
               />
             </Modal>
           )}

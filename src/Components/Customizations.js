@@ -9,6 +9,11 @@ import {
   updateCustomizedItemCount,
 } from "../Store/CartSlice";
 import { countSize } from "../utils/helper";
+import {
+  addItemToStorage,
+  removeCustomItemFromStorage,
+  updateCustomItemInStorage,
+} from "../utils/localStorageItemHelpers";
 
 export default function Customizations({
   toggleModal,
@@ -18,6 +23,7 @@ export default function Customizations({
   restaurantInfo,
   count,
   cartItems,
+  user,
 }) {
   const dispatch = useDispatch();
 
@@ -56,6 +62,7 @@ export default function Customizations({
     if (count === 0) {
       dispatch(addItem(selectedItem));
       dispatch(cartRestaurant(restaurantInfo));
+      if (!user) addItemToStorage(selectedItem, restaurantInfo);
     } else {
       dispatch(
         updateCustomizedItemCount({
@@ -63,11 +70,13 @@ export default function Customizations({
           selectedOption: selectedOptions,
         })
       );
+      if (!user) updateCustomItemInStorage(selectedItem.id, selectedOptions);
     }
   }
   function removeFromCart(id) {
     dispatch(removeCustomizedItem(id));
     dispatch(removeRestaurant());
+    if (!user) removeCustomItemFromStorage(id);
   }
   function selectMenuOption(e) {
     if (e.target.name === "increase" || e.target.name === "price") {
