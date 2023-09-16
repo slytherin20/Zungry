@@ -56,3 +56,7 @@ export function updateCustomizedFoodItemCount(state, action) {
 export function removeCustomizedFoodItem(state, action) {
   state.items = state.items.filter((item) => item.id != action.payload);
 }
+
+export function addFromLocalStorage(state, action) {
+  state.items = [...action.payload];
+}

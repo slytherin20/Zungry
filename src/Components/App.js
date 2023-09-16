@@ -23,6 +23,7 @@ import Cart from "./Cart";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import useUserLocation from "../utils/useUserLocation";
 import { UserLocationContext } from "../utils/UserLocationContext";
+
 function AppLayout() {
   const [searchVal, setSearchVal] = useState("");
   const [user, setUser] = useState(null);

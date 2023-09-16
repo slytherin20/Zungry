@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {
   CART_ICON,
@@ -8,10 +8,21 @@ import {
   SEARCH_ICON,
 } from "../utils/constants";
 import { getAuth } from "firebase/auth";
+import { addFromLocal, cartRestaurant } from "../Store/CartSlice";
 
 export default function Header({ searchResults, user }) {
   const [search, setSearch] = useState("");
-  const cartItems = useSelector((store) => store.cart.items);
+  let cartItems = [];
+  cartItems = useSelector((store) => store.cart.items);
+  const dispatch = useDispatch();
+  if (cartItems && cartItems.length == 0) {
+    let items = JSON.parse(localStorage.getItem("items"));
+    let restaurant = JSON.parse(localStorage.getItem("restaurant"));
+    if (items.length > 0) {
+      dispatch(cartRestaurant(restaurant));
+      dispatch(addFromLocal(items));
+    }
+  }
   const auth = getAuth();
   const navigate = useNavigate();
   function changeSearchVal(e) {
@@ -22,6 +33,7 @@ export default function Header({ searchResults, user }) {
     auth.signOut();
     navigate("/login");
   }
+
   return (
     <div
       className="flex w-full justify-between items-center shadow-md flex-col sm:flex-row p-2"
