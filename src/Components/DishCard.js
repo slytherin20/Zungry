@@ -18,7 +18,7 @@ import { useState } from "react";
 import Customizations from "./Customizations";
 import { useEffect } from "react";
 import { countSize } from "../utils/helper";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../firebase_config";
 import {
   addItemToStorage,
   removeCustomItemFromStorage,
@@ -28,11 +28,7 @@ import {
 export default function DishCard({ dish, restaurantInfo }) {
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [count, setCount] = useState(0);
-  const [user, setUser] = useState(null);
-  const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (user) setUser(user.uid);
-  });
+  let user = auth.currentUser;
   let sizeVariations = dish?.variantsV2?.variantGroups
     ? dish?.variantsV2.variantGroups[0]?.variations
     : null;

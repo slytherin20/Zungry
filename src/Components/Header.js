@@ -7,9 +7,9 @@ import {
   FOOD_LOGO,
   SEARCH_ICON,
 } from "../utils/constants";
-import { getAuth } from "firebase/auth";
-import { addFromLocal, cartRestaurant } from "../Store/CartSlice";
 
+import { addFromLocal, cartRestaurant } from "../Store/CartSlice";
+import { auth } from "../../firebase_config";
 export default function Header({ searchResults, user }) {
   const [search, setSearch] = useState("");
   let cartItems = [];
@@ -18,12 +18,12 @@ export default function Header({ searchResults, user }) {
   if (cartItems && cartItems.length == 0) {
     let items = JSON.parse(localStorage.getItem("items"));
     let restaurant = JSON.parse(localStorage.getItem("restaurant"));
-    if (items.length > 0) {
+    if (items && items.length > 0) {
       dispatch(cartRestaurant(restaurant));
       dispatch(addFromLocal(items));
     }
   }
-  const auth = getAuth();
+
   const navigate = useNavigate();
   function changeSearchVal(e) {
     setSearch(e.target.value);

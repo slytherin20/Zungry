@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { StrictMode, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Header from "./Header";
 import Body from "./Body";
@@ -20,21 +20,19 @@ import SignUp from "./SignUp";
 import { Provider } from "react-redux";
 import store from "../Store/store";
 import Cart from "./Cart";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import useUserLocation from "../utils/useUserLocation";
 import { UserLocationContext } from "../utils/UserLocationContext";
+import { auth } from "../../firebase_config";
 
 function AppLayout() {
   const [searchVal, setSearchVal] = useState("");
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const isOnline = useOnline();
-  const auth = getAuth();
   const userLocation = useUserLocation();
-  onAuthStateChanged(auth, (user) => {
-    if (user) setUser(user.uid);
-  });
+
+  let user = auth.currentUser;
+
   function searchValHandler(val) {
     setSearchVal(val);
     if (location != "/") navigate("/");
@@ -43,9 +41,11 @@ function AppLayout() {
   return (
     <Provider store={store}>
       <UserLocationContext.Provider value={userLocation}>
-        <Header searchResults={searchValHandler} user={user} />
-        {isOnline ? <Outlet context={searchVal} /> : <OfflinePage />}
-        <Footer />
+        <StrictMode>
+          <Header searchResults={searchValHandler} user={user} />
+          {isOnline ? <Outlet context={searchVal} /> : <OfflinePage />}
+          <Footer />
+        </StrictMode>
       </UserLocationContext.Provider>
     </Provider>
   );
