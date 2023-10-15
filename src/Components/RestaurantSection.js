@@ -1,3 +1,4 @@
+import { useOutletContext } from "react-router-dom";
 import { ARROW } from "../utils/constants";
 import DishCard from "./DishCard";
 import NestedRestaurantSection from "./NestedRestaurantSection";
@@ -7,6 +8,7 @@ export default function RestaurantSection({
   toggleMenuSection,
   restaurantInfo,
 }) {
+  const [, user] = useOutletContext();
   function toggleSection(name) {
     toggleMenuSection(name);
   }
@@ -45,6 +47,7 @@ export default function RestaurantSection({
                 dish={el.card.info}
                 key={el.card.info.id}
                 restaurantInfo={restaurantInfo}
+                user={user}
               />
             );
           })}

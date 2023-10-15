@@ -1,5 +1,5 @@
 export function filterData(list, input) {
-  if (input === "") return list;
+  if (!input) return list;
   else {
     let result = list.filter((restaurant) =>
       restaurant.info.name.toLowerCase().includes(input.toLowerCase())

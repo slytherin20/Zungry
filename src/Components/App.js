@@ -1,4 +1,4 @@
-import { StrictMode, useState } from "react";
+import { StrictMode, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Header from "./Header";
 import Body from "./Body";
@@ -24,14 +24,25 @@ import useUserLocation from "../utils/useUserLocation";
 import { UserLocationContext } from "../utils/UserLocationContext";
 import { auth } from "../../firebase_config";
 
+import { onAuthStateChanged } from "firebase/auth";
+
 function AppLayout() {
   const [searchVal, setSearchVal] = useState("");
+  const [user, setUser] = useState(undefined);
   const navigate = useNavigate();
   const location = useLocation();
   const isOnline = useOnline();
   const userLocation = useUserLocation();
 
-  let user = auth.currentUser;
+  useEffect(() => {
+    let authListener = onAuthStateChanged(auth, (user) => {
+      if (user) setUser(user.uid);
+      else setUser(null);
+    });
+    return () => {
+      authListener();
+    };
+  }, []);
 
   function searchValHandler(val) {
     setSearchVal(val);
@@ -43,7 +54,7 @@ function AppLayout() {
       <UserLocationContext.Provider value={userLocation}>
         <StrictMode>
           <Header searchResults={searchValHandler} user={user} />
-          {isOnline ? <Outlet context={searchVal} /> : <OfflinePage />}
+          {isOnline ? <Outlet context={[searchVal, user]} /> : <OfflinePage />}
           <Footer />
         </StrictMode>
       </UserLocationContext.Provider>
