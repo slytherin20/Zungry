@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  addAllItems,
   addFoodItem,
-  addFromLocalStorage,
   clearCart,
   clearSavedRestaurant,
   removeCustomizedFoodItem,
@@ -25,7 +25,7 @@ const cartSlice = createSlice({
     updateItemCount: updateFoodItemCount,
     updateCustomizedItemCount: updateCustomizedFoodItemCount,
     removeCustomizedItem: removeCustomizedFoodItem,
-    addFromLocal: addFromLocalStorage,
+    addAll: addAllItems,
   },
 });
 
@@ -39,5 +39,5 @@ export const {
   updateItemCount,
   updateCustomizedItemCount,
   removeCustomizedItem,
-  addFromLocal,
+  addAll,
 } = cartSlice.actions;

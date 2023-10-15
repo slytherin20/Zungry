@@ -18,22 +18,26 @@ import { useState } from "react";
 import Customizations from "./Customizations";
 import { useEffect } from "react";
 import { countSize } from "../utils/helper";
-import { auth } from "../../firebase_config";
+
 import {
   addItemToStorage,
   removeCustomItemFromStorage,
   removeItemFromStorage,
 } from "../utils/localStorageItemHelpers";
+import {
+  addRestaurantToDB,
+  addToDBCart,
+  updateCartItemInDB,
+} from "../utils/firestore_cart";
 
-export default function DishCard({ dish, restaurantInfo }) {
+export default function DishCard({ dish, restaurantInfo, user }) {
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [count, setCount] = useState(0);
-  let user = auth.currentUser;
   let sizeVariations = dish?.variantsV2?.variantGroups
     ? dish?.variantsV2.variantGroups[0]?.variations
     : null;
   const dispatch = useDispatch();
-  const cartItems = useSelector((store) => store.cart.items);
+  let cartItems = useSelector((store) => store.cart.items);
 
   useEffect(() => {
     if (cartItems.length) {
@@ -50,21 +54,28 @@ export default function DishCard({ dish, restaurantInfo }) {
     } else setCount(0);
   }, [cartItems]);
 
-  function addToCart(item) {
+  function addToCart(dish) {
+    let item = cartItems.find((item) => item.id == dish.id);
     if (sizeVariations) {
       toggleModal();
     } else {
       //Add to localstorage without customization
       if (!user) {
         //Set items and restaurant in local storage
-        addItemToStorage(item, restaurantInfo);
-      }
-
-      if (count === 0) {
-        dispatch(addItem(item));
-        dispatch(cartRestaurant(restaurantInfo));
+        addItemToStorage(dish, restaurantInfo);
+        if (count === 0) {
+          dispatch(addItem(dish));
+          dispatch(cartRestaurant(restaurantInfo));
+        } else {
+          dispatch(updateItemCount(item.id));
+        }
       } else {
-        dispatch(updateItemCount(item.id));
+        if (count === 0) {
+          addToDBCart(dish, user);
+          addRestaurantToDB(restaurantInfo, user);
+        } else {
+          updateCartItemInDB(user, item.id, item.selectedQty);
+        }
       }
     }
   }
