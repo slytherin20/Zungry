@@ -94,7 +94,7 @@ function AppLayout() {
             items.forEach((item) => {
               let findItem = cart.find((data) => data.id === item.id);
               if (!findItem) addToDBCart(item, user);
-              else updateCartItemInDB(user, item.id, findItem.selectedQty);
+              else updateCartItemInDB(user, item.id, findItem.selectedQty + 1);
             });
             localStorage.clear();
           }

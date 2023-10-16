@@ -28,10 +28,9 @@ export async function addRestaurantToDB(restaurantInfo, userid) {
 export async function updateCartItemInDB(uid, itemId, count) {
   const cartRef = doc(db, "Users", uid, "cart", itemId);
   await updateDoc(cartRef, {
-    selectedQty: count + 1,
+    selectedQty: count,
   });
 }
-
 export async function getItemsFomDB(uid) {
   const cartRef = collection(db, "Users", uid, "cart");
   let querySnapshot = await getDocs(cartRef);
@@ -40,23 +39,36 @@ export async function getItemsFomDB(uid) {
   return items;
 }
 export async function getRestaurant(uid) {
-  const ref = collection(db, "Users", uid, "restaurantInfo");
-  let querySnapshot = await getDocs(ref);
-  let restaurantInfo;
-  querySnapshot.forEach((doc) => (restaurantInfo = doc.data()));
+  let restaurantInfo = await getDoc(
+    doc(db, "Users", uid, "restaurantInfo", "restaurant")
+  );
   return restaurantInfo;
 }
 
 export async function clearDB(uid) {
-  const restRef = collection(db, "Users", uid, "restaurantInfo");
   const cartRef = collection(db, "Users", uid, "cart");
   let querySnapshotCart = await getDocs(cartRef);
-  let querySnapshotRest = await getDocs(restRef);
-  let restId = querySnapshotRest.forEach((doc) => doc.id);
   let itemsId = [];
   querySnapshotCart.forEach((doc) => itemsId.push(doc.id));
   itemsId.forEach(async (id) => {
     await deleteDoc(doc(db, "Users", uid, "cart", id));
   });
-  await deleteDoc(doc(db, "Users", uid, "restaurantInfo", restId));
+  await deleteRestaurantFromDB(uid);
+}
+
+export async function updateCustomizedItemInDB(uid, itemId, option) {
+  const cartRef = doc(db, "Users", uid, "cart", itemId);
+  await updateDoc(cartRef, {
+    selectedOptions: {
+      size: option,
+    },
+  });
+}
+
+export async function deleteItemFromDB(uid, id) {
+  await deleteDoc(doc(db, "Users", uid, "cart", id));
+}
+
+export async function deleteRestaurantFromDB(uid) {
+  await deleteDoc(doc(db, "Users", uid, "restaurantInfo", "restaurant"));
 }

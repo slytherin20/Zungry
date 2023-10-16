@@ -7,11 +7,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   addItem,
-  cartRestaurant,
   removeItem,
   removeRestaurant,
   updateItemCount,
   removeCustomizedItem,
+  cartRestaurant,
 } from "../Store/CartSlice";
 import Modal from "./Modal";
 import { useState } from "react";
@@ -27,6 +27,8 @@ import {
 import {
   addRestaurantToDB,
   addToDBCart,
+  deleteItemFromDB,
+  deleteRestaurantFromDB,
   updateCartItemInDB,
 } from "../utils/firestore_cart";
 
@@ -37,8 +39,11 @@ export default function DishCard({ dish, restaurantInfo, user }) {
     ? dish?.variantsV2.variantGroups[0]?.variations
     : null;
   const dispatch = useDispatch();
-  let cartItems = useSelector((store) => store.cart.items);
-
+  let storeCart = useSelector((store) => store.cart);
+  let [cartItems, cartRestaurantInfo] = [
+    storeCart.items || null,
+    storeCart.restaurantDetails || null,
+  ];
   useEffect(() => {
     if (cartItems.length) {
       let item = cartItems.filter((item) => item.id === dish.id)[0];
@@ -57,7 +62,13 @@ export default function DishCard({ dish, restaurantInfo, user }) {
   function addToCart(dish) {
     let item = cartItems.find((item) => item.id == dish.id);
     if (sizeVariations) {
-      toggleModal();
+      if (
+        user &&
+        cartRestaurantInfo &&
+        cartRestaurantInfo.id !== restaurantInfo.id
+      ) {
+        //notify user via popup of different restaurant
+      } else toggleModal();
     } else {
       //Add to localstorage without customization
       if (!user) {
@@ -70,11 +81,15 @@ export default function DishCard({ dish, restaurantInfo, user }) {
           dispatch(updateItemCount(item.id));
         }
       } else {
-        if (count === 0) {
-          addToDBCart(dish, user);
-          addRestaurantToDB(restaurantInfo, user);
+        if (cartRestaurantInfo && cartRestaurantInfo.id !== restaurantInfo.id) {
+          //Notify user via popup.
         } else {
-          updateCartItemInDB(user, item.id, item.selectedQty);
+          if (count === 0) {
+            addToDBCart(dish, user);
+            addRestaurantToDB(restaurantInfo, user);
+          } else {
+            updateCartItemInDB(user, item.id, item.selectedQty + 1);
+          }
         }
       }
     }
@@ -91,19 +106,37 @@ export default function DishCard({ dish, restaurantInfo, user }) {
 
     if (!item.selectedOptions?.size) {
       if (!user) {
+        //No user, no customization
         removeItemFromStorage(id);
-      }
-      dispatch(removeItem(id));
-      if (cartItems.length === 1 && item.selectedQty === 1) {
-        dispatch(removeRestaurant());
+        dispatch(removeItem(id));
+        if (cartItems.length === 1 && item.selectedQty === 1) {
+          dispatch(removeRestaurant());
+        }
+      } else {
+        if (item.selectedQty == 1) {
+          deleteItemFromDB(user, id);
+        } else {
+          updateCartItemInDB(user, id, item.selectedQty - 1);
+        }
+        if (cartItems.length === 1 && item.selectedQty === 1) {
+          deleteRestaurantFromDB(user);
+        }
       }
     } else {
       let c = countSize(item.selectedOptions.size);
-      if (c === 1) {
-        dispatch(removeCustomizedItem(id));
-        dispatch(removeRestaurant());
-        if (!user) removeCustomItemFromStorage(id);
-      } else toggleModal();
+      if (!user) {
+        //No user but customization
+        if (c === 1) {
+          dispatch(removeCustomizedItem(id));
+          if (cartItems.length == 1) dispatch(removeRestaurant());
+          removeCustomItemFromStorage(id);
+        } else toggleModal();
+      } else {
+        if (c === 1) {
+          deleteItemFromDB(user, id);
+          if (cartItems.length == 1) deleteRestaurantFromDB(user);
+        } else toggleModal();
+      }
     }
   }
   if (!dish) return null;

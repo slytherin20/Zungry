@@ -37,6 +37,7 @@ export default function RestaurantSection({
         <NestedRestaurantSection
           dishes={items.categories}
           restaurantInfo={restaurantInfo}
+          user={user}
         />
       )}
       {items.itemCards && visibleSection[items.title] && (
