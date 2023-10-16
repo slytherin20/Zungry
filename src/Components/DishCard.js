@@ -31,10 +31,12 @@ import {
   deleteRestaurantFromDB,
   updateCartItemInDB,
 } from "../utils/firestore_cart";
+import { ReplaceItemsPopup } from "./ReplaceItemsPopup";
 
 export default function DishCard({ dish, restaurantInfo, user }) {
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [count, setCount] = useState(0);
+  const [replaceDishes, setReplaceDishes] = useState(false);
   let sizeVariations = dish?.variantsV2?.variantGroups
     ? dish?.variantsV2.variantGroups[0]?.variations
     : null;
@@ -61,28 +63,19 @@ export default function DishCard({ dish, restaurantInfo, user }) {
 
   function addToCart(dish) {
     let item = cartItems.find((item) => item.id == dish.id);
-    if (sizeVariations) {
-      if (
-        user &&
-        cartRestaurantInfo &&
-        cartRestaurantInfo.id !== restaurantInfo.id
-      ) {
-        //notify user via popup of different restaurant
-      } else toggleModal();
-    } else {
-      //Add to localstorage without customization
-      if (!user) {
-        //Set items and restaurant in local storage
-        addItemToStorage(dish, restaurantInfo);
-        if (count === 0) {
-          dispatch(addItem(dish));
-          dispatch(cartRestaurant(restaurantInfo));
-        } else {
-          dispatch(updateItemCount(item.id));
-        }
+    if (user) {
+      if (sizeVariations) {
+        if (
+          cartRestaurantInfo &&
+          cartRestaurantInfo.id &&
+          cartRestaurantInfo.id !== restaurantInfo.id
+        ) {
+          //notify user via popup of different restaurant
+          replaceDishesModal();
+        } else toggleModal();
       } else {
         if (cartRestaurantInfo && cartRestaurantInfo.id !== restaurantInfo.id) {
-          //Notify user via popup.
+          replaceDishesModal();
         } else {
           if (count === 0) {
             addToDBCart(dish, user);
@@ -92,12 +85,44 @@ export default function DishCard({ dish, restaurantInfo, user }) {
           }
         }
       }
+    } else {
+      if (sizeVariations) {
+        if (
+          cartRestaurantInfo &&
+          cartRestaurantInfo.id &&
+          cartRestaurantInfo.id !== restaurantInfo.id
+        ) {
+          //Notify user via popup.
+          replaceDishesModal();
+        } else toggleModal();
+      } else {
+        //Add to localstorage without customization
+        if (
+          cartRestaurantInfo &&
+          cartRestaurantInfo.id &&
+          cartRestaurantInfo.id !== restaurantInfo.id
+        ) {
+          //Notify user via popup.
+          replaceDishesModal();
+        } else {
+          addItemToStorage(dish, restaurantInfo);
+          if (count === 0) {
+            dispatch(addItem(dish));
+            dispatch(cartRestaurant(restaurantInfo));
+          } else {
+            dispatch(updateItemCount(item.id));
+          }
+        }
+      }
     }
   }
+
   function toggleModal() {
     setIsVisibleModal(!isVisibleModal);
   }
-
+  function replaceDishesModal() {
+    setReplaceDishes(!replaceDishes);
+  }
   function removeFromCart(id) {
     //Localstorage added for no customization
 
@@ -173,6 +198,19 @@ export default function DishCard({ dish, restaurantInfo, user }) {
           )}
 
           <p data-testid="dish-desc">{dish.description}</p>
+          {replaceDishes && (
+            <Modal>
+              <ReplaceItemsPopup
+                from={cartRestaurantInfo.name}
+                to={restaurantInfo.name}
+                toggleHandler={replaceDishesModal}
+                user={user}
+                dish={dish}
+                restaurant={restaurantInfo}
+                customizationModal={toggleModal}
+              />
+            </Modal>
+          )}
           {isVisibleModal && (
             <Modal>
               <Customizations

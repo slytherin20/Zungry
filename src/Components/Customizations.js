@@ -15,6 +15,7 @@ import {
   updateCustomItemInStorage,
 } from "../utils/localStorageItemHelpers";
 import {
+  addRestaurantToDB,
   addToDBCart,
   deleteItemFromDB,
   deleteRestaurantFromDB,
@@ -72,6 +73,7 @@ export default function Customizations({
         addItemToStorage(selectedItem, restaurantInfo);
       } else {
         addToDBCart(selectedItem, user);
+        addRestaurantToDB(restaurantInfo, user);
       }
     } else {
       if (!user) {
