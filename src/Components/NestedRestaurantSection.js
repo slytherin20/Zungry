@@ -1,7 +1,11 @@
 import { useState } from "react";
 import DishCard from "./DishCard";
 
-export default function NestedRestaurantSection({ dishes, restaurantInfo }) {
+export default function NestedRestaurantSection({
+  dishes,
+  restaurantInfo,
+  user,
+}) {
   const [isVisibleCategory, setIsVisibleCategory] = useState(dishes[0].title);
 
   function selectCategory(e) {
@@ -33,6 +37,7 @@ export default function NestedRestaurantSection({ dishes, restaurantInfo }) {
               dish={dish.card.info}
               key={dish.card.info.id}
               restaurantInfo={restaurantInfo}
+              user={user}
             />
           ))}
       </div>

@@ -14,6 +14,13 @@ import {
   removeCustomItemFromStorage,
   updateCustomItemInStorage,
 } from "../utils/localStorageItemHelpers";
+import {
+  addRestaurantToDB,
+  addToDBCart,
+  deleteItemFromDB,
+  deleteRestaurantFromDB,
+  updateCustomizedItemInDB,
+} from "../utils/firestore_cart";
 
 export default function Customizations({
   toggleModal,
@@ -60,23 +67,37 @@ export default function Customizations({
       selectedItem.selectedOptions.size = selectedOptions;
     }
     if (count === 0) {
-      dispatch(addItem(selectedItem));
-      dispatch(cartRestaurant(restaurantInfo));
-      if (!user) addItemToStorage(selectedItem, restaurantInfo);
+      if (!user) {
+        dispatch(addItem(selectedItem));
+        dispatch(cartRestaurant(restaurantInfo));
+        addItemToStorage(selectedItem, restaurantInfo);
+      } else {
+        addToDBCart(selectedItem, user);
+        addRestaurantToDB(restaurantInfo, user);
+      }
     } else {
-      dispatch(
-        updateCustomizedItemCount({
-          id: selectedItem.id,
-          selectedOption: selectedOptions,
-        })
-      );
-      if (!user) updateCustomItemInStorage(selectedItem.id, selectedOptions);
+      if (!user) {
+        dispatch(
+          updateCustomizedItemCount({
+            id: selectedItem.id,
+            selectedOption: selectedOptions,
+          })
+        );
+        updateCustomItemInStorage(selectedItem.id, selectedOptions);
+      } else {
+        updateCustomizedItemInDB(user, selectedItem.id, selectedOptions);
+      }
     }
   }
   function removeFromCart(id) {
-    dispatch(removeCustomizedItem(id));
-    dispatch(removeRestaurant());
-    if (!user) removeCustomItemFromStorage(id);
+    if (!user) {
+      dispatch(removeCustomizedItem(id));
+      if (cartItems.length == 1) dispatch(removeRestaurant()); //Change: restaurant should be deleted only when no other items are in cart
+      removeCustomItemFromStorage(id);
+    } else {
+      deleteItemFromDB(user, id);
+      if (cartItems.length == 1) deleteRestaurantFromDB(user);
+    }
   }
   function selectMenuOption(e) {
     if (e.target.name === "increase" || e.target.name === "price") {

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+
 import {
   CART_ICON,
   USER_ICON,
@@ -8,22 +8,13 @@ import {
   SEARCH_ICON,
 } from "../utils/constants";
 
-import { addFromLocal, cartRestaurant } from "../Store/CartSlice";
 import { auth } from "../../firebase_config";
+import { useSelector } from "react-redux";
+
 export default function Header({ searchResults, user }) {
   const [search, setSearch] = useState("");
   let cartItems = [];
   cartItems = useSelector((store) => store.cart.items);
-  const dispatch = useDispatch();
-  if (cartItems && cartItems.length == 0) {
-    let items = JSON.parse(localStorage.getItem("items"));
-    let restaurant = JSON.parse(localStorage.getItem("restaurant"));
-    if (items && items.length > 0) {
-      dispatch(cartRestaurant(restaurant));
-      dispatch(addFromLocal(items));
-    }
-  }
-
   const navigate = useNavigate();
   function changeSearchVal(e) {
     setSearch(e.target.value);

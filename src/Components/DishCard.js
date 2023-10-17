@@ -7,34 +7,45 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   addItem,
-  cartRestaurant,
   removeItem,
   removeRestaurant,
   updateItemCount,
   removeCustomizedItem,
+  cartRestaurant,
 } from "../Store/CartSlice";
 import Modal from "./Modal";
 import { useState } from "react";
 import Customizations from "./Customizations";
 import { useEffect } from "react";
 import { countSize } from "../utils/helper";
-import { auth } from "../../firebase_config";
+
 import {
   addItemToStorage,
   removeCustomItemFromStorage,
   removeItemFromStorage,
 } from "../utils/localStorageItemHelpers";
+import {
+  addRestaurantToDB,
+  addToDBCart,
+  deleteItemFromDB,
+  deleteRestaurantFromDB,
+  updateCartItemInDB,
+} from "../utils/firestore_cart";
+import { ReplaceItemsPopup } from "./ReplaceItemsPopup";
 
-export default function DishCard({ dish, restaurantInfo }) {
+export default function DishCard({ dish, restaurantInfo, user }) {
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [count, setCount] = useState(0);
-  let user = auth.currentUser;
+  const [replaceDishes, setReplaceDishes] = useState(false);
   let sizeVariations = dish?.variantsV2?.variantGroups
     ? dish?.variantsV2.variantGroups[0]?.variations
     : null;
   const dispatch = useDispatch();
-  const cartItems = useSelector((store) => store.cart.items);
-
+  let storeCart = useSelector((store) => store.cart);
+  let [cartItems, cartRestaurantInfo] = [
+    storeCart.items || null,
+    storeCart.restaurantDetails || null,
+  ];
   useEffect(() => {
     if (cartItems.length) {
       let item = cartItems.filter((item) => item.id === dish.id)[0];
@@ -50,28 +61,68 @@ export default function DishCard({ dish, restaurantInfo }) {
     } else setCount(0);
   }, [cartItems]);
 
-  function addToCart(item) {
-    if (sizeVariations) {
-      toggleModal();
-    } else {
-      //Add to localstorage without customization
-      if (!user) {
-        //Set items and restaurant in local storage
-        addItemToStorage(item, restaurantInfo);
-      }
-
-      if (count === 0) {
-        dispatch(addItem(item));
-        dispatch(cartRestaurant(restaurantInfo));
+  function addToCart(dish) {
+    let item = cartItems.find((item) => item.id == dish.id);
+    if (user) {
+      if (sizeVariations) {
+        if (
+          cartRestaurantInfo &&
+          cartRestaurantInfo.id &&
+          cartRestaurantInfo.id !== restaurantInfo.id
+        ) {
+          //notify user via popup of different restaurant
+          replaceDishesModal();
+        } else toggleModal();
       } else {
-        dispatch(updateItemCount(item.id));
+        if (cartRestaurantInfo && cartRestaurantInfo.id !== restaurantInfo.id) {
+          replaceDishesModal();
+        } else {
+          if (count === 0) {
+            addToDBCart(dish, user);
+            addRestaurantToDB(restaurantInfo, user);
+          } else {
+            updateCartItemInDB(user, item.id, item.selectedQty + 1);
+          }
+        }
+      }
+    } else {
+      if (sizeVariations) {
+        if (
+          cartRestaurantInfo &&
+          cartRestaurantInfo.id &&
+          cartRestaurantInfo.id !== restaurantInfo.id
+        ) {
+          //Notify user via popup.
+          replaceDishesModal();
+        } else toggleModal();
+      } else {
+        //Add to localstorage without customization
+        if (
+          cartRestaurantInfo &&
+          cartRestaurantInfo.id &&
+          cartRestaurantInfo.id !== restaurantInfo.id
+        ) {
+          //Notify user via popup.
+          replaceDishesModal();
+        } else {
+          addItemToStorage(dish, restaurantInfo);
+          if (count === 0) {
+            dispatch(addItem(dish));
+            dispatch(cartRestaurant(restaurantInfo));
+          } else {
+            dispatch(updateItemCount(item.id));
+          }
+        }
       }
     }
   }
+
   function toggleModal() {
     setIsVisibleModal(!isVisibleModal);
   }
-
+  function replaceDishesModal() {
+    setReplaceDishes(!replaceDishes);
+  }
   function removeFromCart(id) {
     //Localstorage added for no customization
 
@@ -80,19 +131,37 @@ export default function DishCard({ dish, restaurantInfo }) {
 
     if (!item.selectedOptions?.size) {
       if (!user) {
+        //No user, no customization
         removeItemFromStorage(id);
-      }
-      dispatch(removeItem(id));
-      if (cartItems.length === 1 && item.selectedQty === 1) {
-        dispatch(removeRestaurant());
+        dispatch(removeItem(id));
+        if (cartItems.length === 1 && item.selectedQty === 1) {
+          dispatch(removeRestaurant());
+        }
+      } else {
+        if (item.selectedQty == 1) {
+          deleteItemFromDB(user, id);
+        } else {
+          updateCartItemInDB(user, id, item.selectedQty - 1);
+        }
+        if (cartItems.length === 1 && item.selectedQty === 1) {
+          deleteRestaurantFromDB(user);
+        }
       }
     } else {
       let c = countSize(item.selectedOptions.size);
-      if (c === 1) {
-        dispatch(removeCustomizedItem(id));
-        dispatch(removeRestaurant());
-        if (!user) removeCustomItemFromStorage(id);
-      } else toggleModal();
+      if (!user) {
+        //No user but customization
+        if (c === 1) {
+          dispatch(removeCustomizedItem(id));
+          if (cartItems.length == 1) dispatch(removeRestaurant());
+          removeCustomItemFromStorage(id);
+        } else toggleModal();
+      } else {
+        if (c === 1) {
+          deleteItemFromDB(user, id);
+          if (cartItems.length == 1) deleteRestaurantFromDB(user);
+        } else toggleModal();
+      }
     }
   }
   if (!dish) return null;
@@ -129,6 +198,19 @@ export default function DishCard({ dish, restaurantInfo }) {
           )}
 
           <p data-testid="dish-desc">{dish.description}</p>
+          {replaceDishes && (
+            <Modal>
+              <ReplaceItemsPopup
+                from={cartRestaurantInfo.name}
+                to={restaurantInfo.name}
+                toggleHandler={replaceDishesModal}
+                user={user}
+                dish={dish}
+                restaurant={restaurantInfo}
+                customizationModal={toggleModal}
+              />
+            </Modal>
+          )}
           {isVisibleModal && (
             <Modal>
               <Customizations

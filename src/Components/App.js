@@ -1,4 +1,4 @@
-import { StrictMode, useState } from "react";
+import { StrictMode, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Header from "./Header";
 import Body from "./Body";
@@ -23,15 +23,98 @@ import Cart from "./Cart";
 import useUserLocation from "../utils/useUserLocation";
 import { UserLocationContext } from "../utils/UserLocationContext";
 import { auth } from "../../firebase_config";
+import { onAuthStateChanged } from "firebase/auth";
+import {
+  cartRestaurant,
+  addAll,
+  emptyCart,
+  removeRestaurant,
+} from "../Store/CartSlice";
+import { useDispatch } from "react-redux";
+import {
+  addRestaurantToDB,
+  addToDBCart,
+  clearDB,
+  updateCartItemInDB,
+} from "../utils/firestore_cart";
+import { collection, doc, onSnapshot, query } from "firebase/firestore";
+import { db } from "../../firebase_config";
 
 function AppLayout() {
   const [searchVal, setSearchVal] = useState("");
+  const [user, setUser] = useState(undefined);
   const navigate = useNavigate();
   const location = useLocation();
   const isOnline = useOnline();
   const userLocation = useUserLocation();
+  const dispatch = useDispatch();
 
-  let user = auth.currentUser;
+  useEffect(() => {
+    let authListener = onAuthStateChanged(auth, (user) => {
+      if (user) setUser(user.uid);
+      else setUser(null);
+    });
+    return () => {
+      authListener();
+    };
+  }, []);
+
+  useEffect(() => {
+    var cartListner, restListner;
+    function fetchCartItems() {
+      if (user) {
+        dispatch(emptyCart());
+        dispatch(removeRestaurant());
+        let cart;
+        let restaurantName;
+        let q = query(collection(db, "Users", user, "cart"));
+        restListner = onSnapshot(
+          doc(db, "Users", user, "restaurantInfo", "restaurant"),
+          (doc) => {
+            let restaurant = JSON.parse(localStorage.getItem("restaurant"));
+            restaurantName = doc.data();
+            if (restaurant) {
+              if (restaurantName.id != restaurant.id) {
+                clearDB(user);
+                addRestaurantToDB(restaurant, user);
+                localStorage.setItem("restaurant", "");
+              }
+            }
+            dispatch(cartRestaurant(restaurantName));
+          }
+        );
+        cartListner = onSnapshot(q, (querySnapshot) => {
+          let items = JSON.parse(localStorage.getItem("items"));
+          cart = [];
+          querySnapshot.forEach((doc) => {
+            cart.push(doc.data());
+          });
+
+          if (items && items.length > 0) {
+            items.forEach((item) => {
+              let findItem = cart.find((data) => data.id === item.id);
+              if (!findItem) addToDBCart(item, user);
+              else updateCartItemInDB(user, item.id, findItem.selectedQty + 1);
+            });
+            localStorage.clear();
+          }
+          dispatch(addAll(cart));
+        });
+      } else {
+        let items = JSON.parse(localStorage.getItem("items"));
+        let restaurant = JSON.parse(localStorage.getItem("restaurant"));
+        if (items && items.length > 0) {
+          dispatch(cartRestaurant(restaurant));
+          dispatch(addAll(items));
+        }
+      }
+    }
+    fetchCartItems();
+    return () => {
+      cartListner && cartListner();
+      restListner && restListner();
+    };
+  }, [user]);
 
   function searchValHandler(val) {
     setSearchVal(val);
@@ -39,15 +122,11 @@ function AppLayout() {
   }
 
   return (
-    <Provider store={store}>
-      <UserLocationContext.Provider value={userLocation}>
-        <StrictMode>
-          <Header searchResults={searchValHandler} user={user} />
-          {isOnline ? <Outlet context={searchVal} /> : <OfflinePage />}
-          <Footer />
-        </StrictMode>
-      </UserLocationContext.Provider>
-    </Provider>
+    <UserLocationContext.Provider value={userLocation}>
+      <Header searchResults={searchValHandler} user={user} />
+      {isOnline ? <Outlet context={[searchVal, user]} /> : <OfflinePage />}
+      <Footer />
+    </UserLocationContext.Provider>
   );
 }
 const appRouter = createBrowserRouter([
@@ -86,4 +165,10 @@ const appRouter = createBrowserRouter([
   },
 ]);
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<RouterProvider router={appRouter} />);
+root.render(
+  <StrictMode>
+    <Provider store={store}>
+      <RouterProvider router={appRouter} />
+    </Provider>
+  </StrictMode>
+);
