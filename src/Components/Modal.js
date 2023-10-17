@@ -1,10 +1,9 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
-const modalContainer = document.querySelector("#modal");
-const body = document.querySelector("body");
-
 function Modal({ children }) {
+  const modalContainer = document.querySelector("#modal");
+  const body = document.querySelector("body");
   const ref = useRef(null);
   if (!ref.current) {
     const node = document.createElement("div");
