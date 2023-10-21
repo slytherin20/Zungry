@@ -1,5 +1,6 @@
 export const FOOD_LOGO = "https://i.imgur.com/c5XOd0b.png";
 export const USER_ICON = "https://i.imgur.com/De67641.png";
+export const LOADING_ICON = "https://i.imgur.com/NK1kF9K.png";
 export const restaurants = [
   {
     type: "restaurant",

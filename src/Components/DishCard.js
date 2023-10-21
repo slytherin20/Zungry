@@ -167,7 +167,7 @@ export default function DishCard({ dish, restaurantInfo, user }) {
   if (!dish) return null;
   return (
     <div className="m-4 relative" data-testid="dish">
-      <div className="w-full flex justify-between m-10" data-testid="dish-card">
+      <div className="w-full flex justify-between m-8" data-testid="dish-card">
         <div className="p-1 w-2/3" data-testid="dish-info">
           {dish.itemAttribute?.vegClassifier && (
             <div className="flex items-center text-sm">
@@ -232,7 +232,7 @@ export default function DishCard({ dish, restaurantInfo, user }) {
             alt="food"
             width="150"
             height="150"
-            className="w-36 h-36"
+            className="w-28 h-28"
             data-testid="dish-img"
           />
         ) : (
