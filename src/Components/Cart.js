@@ -16,8 +16,14 @@ function Cart() {
       let amountArr = cartItems.map((item) => {
         if (item.selectedOptions?.size) {
           let count = countSize(item.selectedOptions.size);
-          return count * (item.price / 100);
-        } else return (item.price / 100) * item.selectedQty;
+          return (
+            count * ((item.defaultPrice ? item.defaultPrice : item.price) / 100)
+          );
+        } else
+          return (
+            ((item.defaultPrice ? item.defaultPrice : item.price) / 100) *
+            item.selectedQty
+          );
       });
       let amount = amountArr.reduce((amt, curr) => amt + curr, 0);
       let delivery = restaurant?.feeDetails?.totalFee / 100;

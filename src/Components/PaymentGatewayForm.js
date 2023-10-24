@@ -21,15 +21,16 @@ export default function PaymentGatewayForm() {
     if (!clientSecret) return;
 
     stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+      console.log("status", paymentIntent.status);
       switch (paymentIntent.status) {
         case "succeeded":
-          setMsg("Payment Successfull");
+          setMsg("Payment Successful");
           break;
         case "processing":
           setMsg("Your payment is processing");
           break;
         case "requires_payment_method":
-          setMsg("Your payment was not successfull. PLease try again!");
+          setMsg("Your payment was not successfull. Please try again!");
           break;
         case "canceled":
           setMsg("Payment canceled");
@@ -43,26 +44,33 @@ export default function PaymentGatewayForm() {
     if (!stripe || !elements) return;
     setIsLoading(true);
 
-    const { err } = await stripe.confirmPayment({
+    const result = await stripe.confirmPayment({
       elements,
       confirmParams: {
         return_url: "http://localhost:5000/success",
       },
     });
-    if (err.type == "card_error" || err.type == "validation_error")
-      setMsg(err.message);
-    else setMsg("An unexpected error occurred.");
+    const err = result.error;
+    if (err) {
+      if (err.type == "card_error" || err.type == "validation_error")
+        setMsg(err.message);
+      else setMsg("An unexpected error occurred.");
+    }
 
     setIsLoading(false);
   }
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement options={{ layout: "tabs" }} id="payment-element" />
-      <button disabled={isLoading || !stripe || !elements} type="submit">
-        {isLoading ? (
-          <span className="spinner animate-spin" id="spinner">
+      <button
+        disabled={isLoading || !stripe || !elements}
+        type="submit"
+        className="w-60 h-8 text-white bg-blue-800 rounded-md flex justify-center items-center"
+      >
+        {isLoading || !stripe || !elements ? (
+          <div className="spinner w-5 h-5 animate-spin" id="spinner">
             <img src={LOADING_ICON} alt="loading" width="20" height="20" />
-          </span>
+          </div>
         ) : (
           <span>Pay Now</span>
         )}
