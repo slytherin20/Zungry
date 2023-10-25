@@ -7,7 +7,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../firebase_config";
+import { db } from "../../firebase_config.mjs";
 export async function addToDBCart(item, userid) {
   let docSnap = await getDoc(doc(db, "Users", userid, "cart", item.id));
   if (docSnap.exists()) {
@@ -71,4 +71,24 @@ export async function deleteItemFromDB(uid, id) {
 
 export async function deleteRestaurantFromDB(uid) {
   await deleteDoc(doc(db, "Users", uid, "restaurantInfo", "restaurant"));
+}
+
+export async function createOrder(uid, orderId, items, restaurantInfo) {
+  try {
+    let order = {
+      id: orderId,
+      items: items,
+      restaurant: {
+        id: restaurantInfo.id,
+        location: restaurantInfo.latLong,
+        name: restaurantInfo.name,
+        locality: restaurantInfo.locality,
+      },
+      status: "pending",
+    };
+    const orderRef = doc(db, "Users", uid, "orders", orderId);
+    await setDoc(orderRef, order);
+  } catch (err) {
+    console.log("Error creating order", err.message);
+  }
 }

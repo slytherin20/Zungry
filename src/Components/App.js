@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import Header from "./Header";
 import Body from "./Body";
 import Footer from "./Footer";
+import Checkout from "./Checkout";
 import {
   createBrowserRouter,
   Outlet,
@@ -39,6 +40,7 @@ import {
 } from "../utils/firestore_cart";
 import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../firebase_config";
+import Success from "./Success";
 
 function AppLayout() {
   const [searchVal, setSearchVal] = useState("");
@@ -150,6 +152,16 @@ const appRouter = createBrowserRouter([
       {
         path: "cart",
         element: <Cart />,
+        errorElement: <RouteError />,
+      },
+      {
+        path: "checkout",
+        element: <Checkout />,
+        errorElement: <RouteError />,
+      },
+      {
+        path: "success",
+        element: <Success />,
         errorElement: <RouteError />,
       },
     ],

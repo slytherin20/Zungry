@@ -5,9 +5,11 @@
   "scripts": {
     "test": "node -r dotenv/config $(which jest)",
     "test-watch": "node -r dotenv/config $(which jest) --watchAll",
-    "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html",
+    "server": "node src/server.js",
+    "start": "npm run server"
   },
+  "proxy": "<http://localhost:5000>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/slytherin20/React.git"
@@ -19,19 +21,24 @@
   },
   "homepage": "https://github.com/slytherin20/React#readme",
   "dependencies": {
+    "@babel/core": "^7.21.8",
+    "@babel/preset-env": "^7.21.5",
+    "@babel/preset-react": "^7.18.6",
     "@reduxjs/toolkit": "^1.9.3",
+    "@stripe/react-stripe-js": "^2.3.1",
+    "@stripe/stripe-js": "^2.1.9",
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "firebase": "^10.1.0",
+    "firebase-admin": "^11.11.0",
     "formik": "^2.2.9",
+    "parcel": "^2.8.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.8.1",
-    "yup": "^1.0.0",
-    "@babel/core": "^7.21.8",
-    "@babel/preset-env": "^7.21.5",
-    "@babel/preset-react": "^7.18.6",
-    "parcel": "^2.8.3"
+    "stripe": "^14.1.0",
+    "yup": "^1.0.0"
   },
   "devDependencies": {
     "@parcel/transformer-react-refresh-wrap": "^2.8.3",
@@ -60,5 +67,6 @@
   },
   "browserslist": [
     "last 10 version"
-  ]
+  ],
+  "type": "module"
 }

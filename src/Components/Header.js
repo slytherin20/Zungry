@@ -80,7 +80,8 @@ export default function Header({ searchResults, user }) {
         </Link>
         {user ? (
           <>
-            <img src={USER_ICON} width="40" height="40" />
+            <img src={USER_ICON} className="h-8" />
+
             <button type="button" onClick={logOutHandler} data-testid="Logout">
               Logout
             </button>
