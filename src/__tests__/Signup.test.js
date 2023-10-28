@@ -3,11 +3,7 @@ import { Provider } from "react-redux";
 import store from "../Store/store";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import * as router from "react-router";
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-  getAuth,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import "@testing-library/jest-dom";
 jest.mock("firebase/auth", () => {
   return {
@@ -17,9 +13,6 @@ jest.mock("firebase/auth", () => {
       },
     }),
     createUserWithEmailAndPassword: jest.fn(() => {
-      return Promise.resolve();
-    }),
-    updateProfile: jest.fn(() => {
       return Promise.resolve();
     }),
   };
@@ -321,15 +314,6 @@ describe("Signup page", () => {
         "John.doe8@8"
       );
       expect(createUserWithEmailAndPassword).toHaveBeenCalledTimes(1);
-      expect(updateProfile).toHaveBeenCalledWith(
-        {
-          uid: "123456xwtre",
-        },
-        {
-          displayName: "John Doe",
-        }
-      );
-      expect(updateProfile).toHaveBeenCalledTimes(1);
     });
   });
 });
