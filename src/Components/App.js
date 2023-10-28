@@ -11,7 +11,6 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import ContactUs from "./ContactUs";
 import RouteError from "./RouteError";
 import RestaurantDetails from "./RestaurantDetails";
 import LoginForm from "./LoginForm";
@@ -37,10 +36,11 @@ import {
   addToDBCart,
   clearDB,
   updateCartItemInDB,
-} from "../utils/firestore_cart";
+} from "../utils/firestore_utils";
 import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../firebase_config";
 import Success from "./Success";
+import Account from "./Account";
 
 function AppLayout() {
   const [searchVal, setSearchVal] = useState("");
@@ -140,10 +140,7 @@ const appRouter = createBrowserRouter([
         path: "/",
         element: <Body />,
       },
-      {
-        path: "contact",
-        element: <ContactUs />,
-      },
+
       {
         path: "restaurants/:id",
         element: <RestaurantDetails />,
@@ -162,6 +159,11 @@ const appRouter = createBrowserRouter([
       {
         path: "success",
         element: <Success />,
+        errorElement: <RouteError />,
+      },
+      {
+        path: "account",
+        element: <Account />,
         errorElement: <RouteError />,
       },
     ],

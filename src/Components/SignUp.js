@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase_config";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { saveAccountDetails } from "../utils/firestore_utils";
 export default function SignUp() {
   const navigate = useNavigate();
   const formik = useFormik({
@@ -45,13 +46,18 @@ export default function SignUp() {
 
   function createUser(values) {
     createUserWithEmailAndPassword(auth, values.email, values.password)
-      .then(() => {
-        const user = auth.currentUser;
-        updateProfile(user, {
-          displayName: formik.values.firstName + " " + formik.values.lastName,
-        })
-          .then(() => navigate("/"))
-          .catch((err) => console.log(err));
+      .then(async () => {
+        const user = auth.currentUser.uid;
+        try {
+          await saveAccountDetails(user, {
+            first: formik.values.firstName,
+            last: formik.values.lastName,
+            email: formik.values.email,
+          });
+          navigate("/account");
+        } catch (err) {
+          console.log(err);
+        }
       })
       .catch(() => {
         //  notify("Error creating user. Please try again later.");
