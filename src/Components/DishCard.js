@@ -30,7 +30,7 @@ import {
   deleteItemFromDB,
   deleteRestaurantFromDB,
   updateCartItemInDB,
-} from "../utils/firestore_cart";
+} from "../utils/firestore_utils";
 import { ReplaceItemsPopup } from "./ReplaceItemsPopup";
 
 export default function DishCard({ dish, restaurantInfo, user }) {

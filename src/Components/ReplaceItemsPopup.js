@@ -3,7 +3,7 @@ import {
   addRestaurantToDB,
   addToDBCart,
   clearDB,
-} from "../utils/firestore_cart";
+} from "../utils/firestore_utils";
 import {
   addItem,
   cartRestaurant,

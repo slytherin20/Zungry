@@ -20,7 +20,7 @@ import {
   deleteItemFromDB,
   deleteRestaurantFromDB,
   updateCustomizedItemInDB,
-} from "../utils/firestore_cart";
+} from "../utils/firestore_utils";
 
 export default function Customizations({
   toggleModal,

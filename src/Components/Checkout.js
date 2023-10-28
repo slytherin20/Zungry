@@ -5,7 +5,7 @@ import { countSize } from "../utils/helper.js";
 import { useOutletContext } from "react-router-dom";
 import { Elements } from "@stripe/react-stripe-js";
 import PaymentGatewayForm from "./PaymentGatewayForm";
-import { createOrder } from "../utils/firestore_cart.js";
+import { createOrder } from "../utils/firestore_utils.js";
 const stripePromise = loadStripe(process.env.REACT_PUBLISHABLE_KEY);
 export default function Checkout() {
   const [, user] = useOutletContext();
