@@ -12,6 +12,9 @@ module.exports = {
       "bg-accent-gray": "rgba(0, 0, 0, 0.2)",
     },*/
     },
+    minWidth: {
+      4: "16px",
+    },
   },
   plugins: [],
   safelist: ["lp", "sp", "bg-accent-gray"],

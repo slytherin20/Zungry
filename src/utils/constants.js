@@ -1,5 +1,5 @@
 export const FOOD_LOGO = "https://i.imgur.com/c5XOd0b.png";
-export const USER_ICON = "https://i.imgur.com/De67641.png";
+export const USER_ICON = "https://i.imgur.com/i5QNGk2.png";
 export const LOADING_ICON = "https://i.imgur.com/NK1kF9K.png";
 export const restaurants = [
   {
@@ -156,3 +156,7 @@ export const VEG_LOGO = "https://i.imgur.com/lEMNtv0.png";
 export const NONVEG_LOGO = "https://i.imgur.com/qmye33X.png";
 export const CART_ICON = "https://i.imgur.com/wxiCrA4.png";
 export const CLOSE_BTN = "https://i.imgur.com/7BUT1pH.png";
+export const EDIT_ICON = "https://i.imgur.com/nwboJRI.png";
+export const HOME_ICON = "https://i.imgur.com/0naD0Oq.png";
+export const ORDER_ICON = "https://i.imgur.com/62u6RZz.png";
+export const LOGIN_LOGOUT_ICON = "https://i.imgur.com/TqqDYnB.png";

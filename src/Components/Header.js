@@ -6,6 +6,9 @@ import {
   USER_ICON,
   FOOD_LOGO,
   SEARCH_ICON,
+  HOME_ICON,
+  ORDER_ICON,
+  LOGIN_LOGOUT_ICON,
 } from "../utils/constants";
 
 import { auth } from "../../firebase_config";
@@ -62,33 +65,67 @@ export default function Header({ searchResults, user }) {
           data-testid="search-btn"
         />
       </div>
-      <div className="flex flex-row w-full sm:w-80 mr-1 justify-between">
-        <Link to="/">
+      <div className="flex text-sm">
+        <Link to="/" className="ml-1 mr-1 flex flex-col items-center">
+          <img src={HOME_ICON} alt="go to home page" className="w-6 h-6" />
           <span>Home</span>
         </Link>
-        <Link to="/about">
-          <span>About Us</span>
-        </Link>
-        <Link to="/contact">
-          <span>Contact Us</span>
-        </Link>
-        <Link to="/cart">
-          <div className="inline-block">
-            <img src={CART_ICON} alt="cart" className="w-7 h-7" />
-            <span data-testid="cart-count">{cartItems.length}</span>
+        {user ? (
+          <>
+            <Link
+              to="/account"
+              className="ml-1 mr-1 flex flex-col items-center"
+            >
+              <img src={USER_ICON} alt="go to account" className="w-6 h-6" />
+              <span>Account</span>
+            </Link>
+            <Link to="/order" className="ml-1 mr-1">
+              <img src={ORDER_ICON} alt="Go to orders placed page" />
+              <span>Orders</span>
+            </Link>
+          </>
+        ) : null}
+
+        <Link to="/cart" className="ml-1 mr-1 ">
+          <div className="flex flex-col items-center relative">
+            <img src={CART_ICON} alt="cart" className="w-6 h-6" />
+            <span>Cart</span>
+            <div
+              data-testid="cart-count"
+              className="inline-block bg-black text-white absolute right-0 top-0 rounded-full text-xs text-center min-w-4 pl-0.5 pr-0.5"
+            >
+              {cartItems.length}
+            </div>
           </div>
         </Link>
         {user ? (
           <>
-            <img src={USER_ICON} className="h-8" />
-
-            <button type="button" onClick={logOutHandler} data-testid="Logout">
+            <button
+              type="button"
+              onClick={logOutHandler}
+              data-testid="Logout"
+              className="ml-1 mr-1 flex flex-col items-center"
+            >
+              <img
+                src={LOGIN_LOGOUT_ICON}
+                alt="logout from app"
+                className="w-6 h-6"
+              />
               Logout
             </button>
           </>
         ) : (
           <Link to="/login">
-            <button type="button" data-testid="Login">
+            <button
+              type="button"
+              data-testid="Login"
+              className="ml-1 mr-1 flex flex-col items-center"
+            >
+              <img
+                src={LOGIN_LOGOUT_ICON}
+                alt="login to app"
+                className="w-6 h-6"
+              />
               Login
             </button>
           </Link>
