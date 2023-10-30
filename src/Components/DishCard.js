@@ -198,7 +198,7 @@ export default function DishCard({ dish, restaurantInfo, user }) {
           )}
 
           <p data-testid="dish-desc">{dish.description}</p>
-          {replaceDishes && (
+          {replaceDishes && cartRestaurantInfo?.name && (
             <Modal>
               <ReplaceItemsPopup
                 from={cartRestaurantInfo.name}

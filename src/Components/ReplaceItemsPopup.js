@@ -24,9 +24,9 @@ export function ReplaceItemsPopup({
     ? dish?.variantsV2.variantGroups[0]?.variations
     : null;
   const dispatch = useDispatch();
-  function replaceCartItems() {
+  async function replaceCartItems() {
     if (user) {
-      clearDB(user);
+      await clearDB(user);
       if (sizeVariations) {
         toggleHandler();
         customizationModal();

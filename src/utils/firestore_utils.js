@@ -19,10 +19,15 @@ export async function addToDBCart(item, userid) {
 }
 
 export async function addRestaurantToDB(restaurantInfo, userid) {
-  await setDoc(
-    doc(db, "Users", userid, "restaurantInfo", "restaurant"),
-    restaurantInfo
-  );
+  try {
+    await setDoc(
+      doc(db, "Users", userid, "restaurantInfo", "restaurant"),
+      restaurantInfo
+    );
+    return true;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 export async function updateCartItemInDB(uid, itemId, count) {
@@ -54,6 +59,7 @@ export async function clearDB(uid) {
     await deleteDoc(doc(db, "Users", uid, "cart", id));
   });
   await deleteRestaurantFromDB(uid);
+  return true;
 }
 
 export async function updateCustomizedItemInDB(uid, itemId, option) {
