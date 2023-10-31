@@ -1,8 +1,11 @@
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
+import { HIDE_PASSWORD, SHOW_PASSWORD } from "../utils/constants";
 export default function LoginForm() {
   const auth = getAuth();
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
   const validate = (values) => {
     let errors = {};
@@ -36,6 +39,9 @@ export default function LoginForm() {
         });
     },
   });
+  function changePwdVisibility() {
+    setPasswordVisible(!passwordVisible);
+  }
   return (
     <div className="w-96 h-96 rounded-3xl border border-gray-200 font-sans lp m-2">
       <h1 className="text-center text-2xl">Login</h1>
@@ -62,18 +68,35 @@ export default function LoginForm() {
           </p>
         ) : null}
         <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          placeholder="Enter your password"
-          className="h-8 mb-5 border border-gray-300 rounded-md outline-none"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          data-testid="password"
-          autoComplete="current-password"
-        />
+        <div className="flex h-8 mb-5 border border-gray-300 rounded-md outline-none items-center active:outline">
+          <input
+            type={passwordVisible ? "text" : "password"}
+            name="password"
+            id="password"
+            placeholder="Enter your password"
+            className="w-full"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            data-testid="password"
+            autoComplete="current-password"
+          />
+          {passwordVisible ? (
+            <img
+              src={HIDE_PASSWORD}
+              alt="show password while typing"
+              onClick={changePwdVisibility}
+              className="w-6 h-6 mr-1"
+            />
+          ) : (
+            <img
+              src={SHOW_PASSWORD}
+              alt="hide password while typing"
+              onClick={changePwdVisibility}
+              className="w-6 h-6 mr-1"
+            />
+          )}
+        </div>
         {formik.touched.password && formik.errors.password ? (
           <p className="text-red-600" data-testid="password-error">
             {formik.errors.password}

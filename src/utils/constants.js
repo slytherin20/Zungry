@@ -160,3 +160,5 @@ export const EDIT_ICON = "https://i.imgur.com/nwboJRI.png";
 export const HOME_ICON = "https://i.imgur.com/0naD0Oq.png";
 export const ORDER_ICON = "https://i.imgur.com/62u6RZz.png";
 export const LOGIN_LOGOUT_ICON = "https://i.imgur.com/TqqDYnB.png";
+export const SHOW_PASSWORD = "https://i.imgur.com/dxMu55L.png";
+export const HIDE_PASSWORD = "https://i.imgur.com/iAw2c8e.png";

@@ -2,9 +2,13 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase_config";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { saveAccountDetails } from "../utils/firestore_utils";
+import { useState } from "react";
+import { SHOW_PASSWORD, HIDE_PASSWORD } from "../utils/constants";
 export default function SignUp() {
+  const [visiblePwd, setVisiblePwd] = useState(false);
+  const [visibleCofirmPwd, setVisibleConfirmPwd] = useState(false);
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -62,6 +66,13 @@ export default function SignUp() {
       .catch(() => {
         //  notify("Error creating user. Please try again later.");
       });
+  }
+  function changePwdVisibility() {
+    setVisiblePwd(!visiblePwd);
+  }
+
+  function changeConfirmPwdVisibility() {
+    setVisibleConfirmPwd(!visibleCofirmPwd);
   }
   return (
     <div className="w-96 h-[600px] rounded-3xl border border-gray-200 font-sans sp m-2">
@@ -128,34 +139,68 @@ export default function SignUp() {
           </p>
         ) : null}
         <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          className="h-8 mb-5 border border-gray-300 rounded-md outline-none"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          data-testid="password"
-          autoComplete="off"
-        />
+        <div className="flex h-8 mb-5 border border-gray-300 rounded-md  items-center">
+          <input
+            type={visiblePwd ? "text" : "password"}
+            name="password"
+            id="password"
+            className="w-full outline-none"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            data-testid="password"
+            autoComplete="off"
+          />
+          {visiblePwd ? (
+            <img
+              src={HIDE_PASSWORD}
+              alt="show password while typing"
+              onClick={changePwdVisibility}
+              className="w-6 h-6 mr-1"
+            />
+          ) : (
+            <img
+              src={SHOW_PASSWORD}
+              alt="hide password while typing"
+              onClick={changePwdVisibility}
+              className="w-6 h-6 mr-1"
+            />
+          )}
+        </div>
         {formik.touched.password && formik.errors.password ? (
           <p className="text-red-600" data-testid="password-error">
             {formik.errors.password}
           </p>
         ) : null}
         <label htmlFor="reenterPassword">Re-Enter the Password</label>
-        <input
-          type="password"
-          name="reenterPassword"
-          id="reenterPassword"
-          className="h-8 mb-5 border border-gray-300 rounded-md outline-none"
-          value={formik.values.reenterPassword}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          data-testid="repassword"
-          autoComplete="off"
-        />
+        <div className="flex h-8 mb-5 border border-gray-300 rounded-md  items-center">
+          <input
+            type={visibleCofirmPwd ? "text" : "password"}
+            name="reenterPassword"
+            id="reenterPassword"
+            className="w-full outline-none"
+            value={formik.values.reenterPassword}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            data-testid="repassword"
+            autoComplete="off"
+          />
+          {visibleCofirmPwd ? (
+            <img
+              src={HIDE_PASSWORD}
+              alt="show password while typing"
+              onClick={changeConfirmPwdVisibility}
+              className="w-6 h-6 mr-1"
+            />
+          ) : (
+            <img
+              src={SHOW_PASSWORD}
+              alt="hide password while typing"
+              onClick={changeConfirmPwdVisibility}
+              className="w-6 h-6 mr-1"
+            />
+          )}
+        </div>
         {formik.touched.reenterPassword && formik.errors.reenterPassword ? (
           <p className="text-red-600" data-testid="repassword-error">
             {formik.errors.reenterPassword}
