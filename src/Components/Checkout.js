@@ -2,18 +2,21 @@ import { useSelector } from "react-redux";
 import { loadStripe } from "@stripe/stripe-js";
 import { useState, useEffect } from "react";
 import { countSize } from "../utils/helper.js";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { Elements } from "@stripe/react-stripe-js";
 import PaymentGatewayForm from "./PaymentGatewayForm";
 import { createOrder } from "../utils/firestore_utils.js";
+import AddressView from "./AddressView.js";
 const stripePromise = loadStripe(process.env.REACT_PUBLISHABLE_KEY);
 export default function Checkout() {
   const [, user] = useOutletContext();
   const cart = useSelector((store) => store.cart);
+  const profileDetails = useSelector((store) => store.account.profileDetails);
   const restaurant = cart.restaurantDetails;
   const cartItems = cart.items;
   const [clientSecret, setClientSecret] = useState("");
   const [total, setTotal] = useState(0);
+  const navigate = useNavigate();
   useEffect(() => {
     if (user) {
       let amountArr = cartItems.map((item) => {
@@ -33,7 +36,8 @@ export default function Checkout() {
       let gst = (amount * 5) / 100;
       setTotal(amount + gst + delivery + 3);
       let time = new Date().getTime();
-      let orderId = time + "-" + user.slice(0, 4) + cartItems.length;
+      let orderId =
+        time.slice(4) + user.slice(0, 4) + cartItems.length + time.slice(4);
       fetchClientSecret(orderId);
       createOrder(user, orderId, cartItems, restaurant);
     }
@@ -61,19 +65,24 @@ export default function Checkout() {
   }
 
   if (!user) return <h1>404-Not Found</h1>;
-  if (!cartItems.length) return null;
+  if (!cartItems.length || !profileDetails) return null;
+  if (!profileDetails.mobile) navigate("/account");
   return (
     <article className="checkout-page flex p-5">
-      <section className="user-info">Some lorem ipsum address</section>
-      <p>Total Bill: {total.toFixed(2)}</p>
-      {clientSecret && (
-        <Elements
-          options={{ clientSecret, appearance: { theme: "stripe" } }}
-          stripe={stripePromise}
-        >
-          <PaymentGatewayForm />
-        </Elements>
-      )}
+      <AddressView profileDetails={profileDetails} />
+      <section className="w-2/4">
+        <p>
+          <b>Total Bill:</b> {total.toFixed(2)}
+        </p>
+        {clientSecret && (
+          <Elements
+            options={{ clientSecret, appearance: { theme: "stripe" } }}
+            stripe={stripePromise}
+          >
+            <PaymentGatewayForm profileDetails={profileDetails} />
+          </Elements>
+        )}
+      </section>
     </article>
   );
 }

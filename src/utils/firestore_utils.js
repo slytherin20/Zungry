@@ -109,10 +109,3 @@ export async function saveAccountDetails(uid, details) {
     return false;
   }
 }
-
-export async function getAccountDetails(uid) {
-  let accountRef = doc(db, "Users", uid, "Account", "account");
-  let res = await getDoc(accountRef);
-  let accountDetails = res.data();
-  return accountDetails;
-}

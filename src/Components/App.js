@@ -41,6 +41,7 @@ import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../firebase_config";
 import Success from "./Success";
 import Account from "./Account";
+import { saveDetails } from "../Store/acountSlice";
 
 function AppLayout() {
   const [searchVal, setSearchVal] = useState("");
@@ -62,7 +63,7 @@ function AppLayout() {
   }, []);
 
   useEffect(() => {
-    var cartListner, restListner;
+    var cartListner, restListner, accountListner;
     function fetchCartItems() {
       if (user) {
         dispatch(emptyCart());
@@ -111,10 +112,20 @@ function AppLayout() {
         }
       }
     }
+    function fetchAccountDetails() {
+      accountListner = onSnapshot(
+        doc(db, "Users", user, "Account", "account"),
+        (doc) => {
+          dispatch(saveDetails(doc.data()));
+        }
+      );
+    }
     fetchCartItems();
+    if (user) fetchAccountDetails();
     return () => {
       cartListner && cartListner();
       restListner && restListner();
+      accountListner && accountListner();
     };
   }, [user]);
 

@@ -6,13 +6,14 @@ import {
 import { useEffect } from "react";
 import { useState } from "react";
 import { LOADING_ICON } from "../utils/constants";
+import { useNavigate } from "react-router-dom";
 
-export default function PaymentGatewayForm() {
+export default function PaymentGatewayForm({ profileDetails }) {
   const stripe = useStripe();
   const elements = useElements();
   const [msg, setMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (!stripe) return;
     let clientSecret = new URLSearchParams(window.location.search).get(
@@ -42,6 +43,7 @@ export default function PaymentGatewayForm() {
   async function handleSubmit(e) {
     e.preventDefault();
     if (!stripe || !elements) return;
+    if (!profileDetails.mobile || !profileDetails.address) navigate("/account");
     setIsLoading(true);
 
     const result = await stripe.confirmPayment({
@@ -63,7 +65,13 @@ export default function PaymentGatewayForm() {
     <form id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement options={{ layout: "tabs" }} id="payment-element" />
       <button
-        disabled={isLoading || !stripe || !elements}
+        disabled={
+          isLoading ||
+          !stripe ||
+          !elements ||
+          !profileDetails.mobile ||
+          !profileDetails.address
+        }
         type="submit"
         className="w-60 h-8 text-white bg-blue-800 rounded-md flex justify-center items-center"
       >

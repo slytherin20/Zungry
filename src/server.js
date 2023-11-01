@@ -32,7 +32,6 @@ const db = getFirestore();
 
 async function calculateAmount(totalFee, items) {
   let deliveryCharges = totalFee || 0;
-  console.log(deliveryCharges);
   let amountArr = items.map((item) => {
     if (item.selectedOptions?.size) {
       let count = countSize(item.selectedOptions.size);
@@ -43,9 +42,7 @@ async function calculateAmount(totalFee, items) {
       );
   });
   let amount = amountArr.reduce((amt, curr) => amt + curr, 0);
-  console.log(amount);
   let gst = (amount * 5) / 100;
-  console.log(gst);
 
   return amount + deliveryCharges + 300 + gst; //Platform fees is Rs.3
 }
@@ -58,6 +55,12 @@ function countSize(sizeTypes) {
 async function handleSuccessfulOrderPlaced(data) {
   let time = new Date().toLocaleString();
   //Update order status to completed
+  let profileDetails = db
+    .collection("Users")
+    .doc(data.id)
+    .collection("Account")
+    .doc("account");
+  let profile = await profileDetails.get();
 
   const orderRef = db
     .collection("Users")
@@ -68,6 +71,7 @@ async function handleSuccessfulOrderPlaced(data) {
   await orderRef.update({
     status: "completed",
     time,
+    profile: profile.data(),
   });
   //clear cart and restaurant
   let restaurantRef = db

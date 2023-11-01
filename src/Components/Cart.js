@@ -9,8 +9,10 @@ import { countSize } from "../utils/helper";
 function Cart() {
   let cartItems = useSelector((store) => store.cart.items);
   let restaurant = useSelector((store) => store.cart.restaurantDetails);
+  let account = useSelector((store) => store.account.profileDetails);
   const [, user] = useOutletContext();
   const [details, setDetails] = useState({});
+
   useEffect(() => {
     if (cartItems.length) {
       let amountArr = cartItems.map((item) => {
@@ -133,12 +135,21 @@ function Cart() {
             </p>
           </div>
         </section>
-        {user && (
+
+        {user && account?.address && account?.mobile ? (
           <Link to="/checkout">
             <button className="bg-green-900 w-32 h-8 text-white p-1 rounded-md float-right">
               Checkout {" >>"}
             </button>
           </Link>
+        ) : (
+          user && (
+            <Link to="/account">
+              <button className="bg-green-900 w-32 h-8 text-white p-1 rounded-md float-right">
+                Checkout {" >>"}
+              </button>
+            </Link>
+          )
         )}
         {!user && (
           <Link to="/login">

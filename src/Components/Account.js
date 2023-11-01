@@ -1,14 +1,12 @@
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useOutletContext } from "react-router-dom";
-import {
-  getAccountDetails,
-  saveAccountDetails,
-} from "../utils/firestore_utils";
+import { saveAccountDetails } from "../utils/firestore_utils";
 import { CLOSE_BTN, EDIT_ICON, LOADING_ICON } from "../utils/constants";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 export default function Account() {
-  const [details, setDetails] = useState({});
   const [, user] = useOutletContext();
   const [editType, setEditType] = useState({
     mobile: false,
@@ -16,16 +14,13 @@ export default function Account() {
   });
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const details = useSelector((store) => store.account.profileDetails);
+
   useEffect(() => {
-    if (user) getDetails();
-  }, [user]);
-
-  async function getDetails() {
-    let details = await getAccountDetails(user);
-
-    setDetails(details);
-    setLoading(false);
-  }
+    if (details.first) {
+      setLoading(false);
+    }
+  }, [details]);
   function changeEditType(e) {
     setEditType({
       ...editType,
