@@ -42,6 +42,7 @@ import { db } from "../../firebase_config";
 import Success from "./Success";
 import Account from "./Account";
 import { saveDetails } from "../Store/acountSlice";
+import OrdersList from "./OrdersList";
 
 function AppLayout() {
   const [searchVal, setSearchVal] = useState("");
@@ -175,6 +176,11 @@ const appRouter = createBrowserRouter([
       {
         path: "account",
         element: <Account />,
+        errorElement: <RouteError />,
+      },
+      {
+        path: "orderslist",
+        element: <OrdersList />,
         errorElement: <RouteError />,
       },
     ],

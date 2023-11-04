@@ -34,12 +34,16 @@ export default function Checkout() {
       let amount = amountArr.reduce((amt, curr) => amt + curr, 0);
       let delivery = restaurant?.feeDetails?.totalFee / 100;
       let gst = (amount * 5) / 100;
-      setTotal(amount + gst + delivery + 3);
+      let totalRes = amount + gst + delivery + 3;
+      setTotal(totalRes);
       let time = new Date().getTime();
       let orderId =
-        time.slice(4) + user.slice(0, 4) + cartItems.length + time.slice(4);
+        String(time).slice(4) +
+        user.slice(0, 4) +
+        cartItems.length +
+        String(time).slice(4);
       fetchClientSecret(orderId);
-      createOrder(user, orderId, cartItems, restaurant);
+      createOrder(user, orderId, cartItems, restaurant, totalRes);
     }
   }, [cartItems]);
 

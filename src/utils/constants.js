@@ -162,3 +162,5 @@ export const ORDER_ICON = "https://i.imgur.com/62u6RZz.png";
 export const LOGIN_LOGOUT_ICON = "https://i.imgur.com/TqqDYnB.png";
 export const SHOW_PASSWORD = "https://i.imgur.com/dxMu55L.png";
 export const HIDE_PASSWORD = "https://i.imgur.com/iAw2c8e.png";
+export const EMPTY_STAR = "https://i.imgur.com/FTDyAoD.png";
+export const FILLED_STAR = "https://i.imgur.com/A9VWdz8.png";

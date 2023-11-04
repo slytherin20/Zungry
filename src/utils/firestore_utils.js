@@ -4,8 +4,10 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { db } from "../../firebase_config.mjs";
 export async function addToDBCart(item, userid) {
@@ -79,7 +81,7 @@ export async function deleteRestaurantFromDB(uid) {
   await deleteDoc(doc(db, "Users", uid, "restaurantInfo", "restaurant"));
 }
 
-export async function createOrder(uid, orderId, items, restaurantInfo) {
+export async function createOrder(uid, orderId, items, restaurantInfo, amount) {
   try {
     let order = {
       id: orderId,
@@ -91,6 +93,7 @@ export async function createOrder(uid, orderId, items, restaurantInfo) {
         locality: restaurantInfo.locality,
       },
       status: "pending",
+      totalAmount: amount,
     };
     const orderRef = doc(db, "Users", uid, "orders", orderId);
     await setDoc(orderRef, order);
@@ -108,4 +111,25 @@ export async function saveAccountDetails(uid, details) {
     console.log(err.message);
     return false;
   }
+}
+
+export async function getOrdersList(uid) {
+  try {
+    let orders = [];
+    let ordersRef = collection(db, "Users", uid, "orders");
+    const q = query(ordersRef, where("status", "!=", "pending"));
+    let docs = await getDocs(q);
+    docs.forEach((doc) => orders.push(doc.data()));
+    return orders;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+}
+
+export async function addOrderRating(uid, orderId, val) {
+  let orderRef = doc(db, "Users", uid, "orders", orderId);
+  await updateDoc(orderRef, {
+    rating: val,
+  });
 }

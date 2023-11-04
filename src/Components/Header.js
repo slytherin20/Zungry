@@ -79,7 +79,7 @@ export default function Header({ searchResults, user }) {
               <img src={USER_ICON} alt="go to account" className="w-6 h-6" />
               <span>Account</span>
             </Link>
-            <Link to="/order" className="ml-1 mr-1">
+            <Link to="/orderslist" className="ml-1 mr-1">
               <img src={ORDER_ICON} alt="Go to orders placed page" />
               <span>Orders</span>
             </Link>
