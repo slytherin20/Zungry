@@ -205,7 +205,7 @@ export default function DishCard({ dish, restaurantInfo, user }) {
                 to={restaurantInfo.name}
                 toggleHandler={replaceDishesModal}
                 user={user}
-                dish={dish}
+                dishes={dish}
                 restaurant={restaurantInfo}
                 customizationModal={toggleModal}
               />

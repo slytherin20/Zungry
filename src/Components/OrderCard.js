@@ -1,8 +1,16 @@
 import { EMPTY_STAR, FILLED_STAR } from "../utils/constants";
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import { addOrderRating } from "../utils/firestore_utils";
-export default function OrderCard({ order, reorderItem, user }) {
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  addOrderRating,
+  addRestaurantToDB,
+  addToDBCart,
+} from "../utils/firestore_utils";
+import { useSelector } from "react-redux";
+import Modal from "./Modal";
+import { ReplaceItemsPopup } from "./ReplaceItemsPopup";
+
+export default function OrderCard({ order, user }) {
   const [rating, setRating] = useState({
     stars: {
       1: false,
@@ -13,7 +21,10 @@ export default function OrderCard({ order, reorderItem, user }) {
     },
     value: 0,
   });
-
+  const [replaceCart, setReplaceCart] = useState(false);
+  const cart = useSelector((store) => store.cart);
+  const [isReorder, setIsReorder] = useState(false);
+  const navigate = useNavigate();
   function changeHoveredStars(e) {
     let id = e.target.id;
     let obj = {};
@@ -48,6 +59,12 @@ export default function OrderCard({ order, reorderItem, user }) {
     });
   }
 
+  useEffect(() => {
+    if (isReorder) {
+      navigate("/cart");
+    }
+  }, [cart.items]);
+
   function addRating() {
     let count = 0;
     [1, 2, 3, 4, 5].forEach((val) => {
@@ -60,6 +77,22 @@ export default function OrderCard({ order, reorderItem, user }) {
       value: count,
     });
     addOrderRating(user, order.id, count);
+  }
+  function replaceCartHandler() {
+    setReplaceCart(!replaceCart);
+  }
+  async function reorderItem() {
+    setIsReorder(true);
+    if (cart.items.length > 0) {
+      if (cart.restaurantDetails.id == order.restaurant.id) {
+        order.items.forEach((item) => addToDBCart(item, user));
+      } else {
+        setReplaceCart(true);
+      }
+    } else {
+      addRestaurantToDB(order.restaurant, user);
+      order.items.forEach((item) => addToDBCart(item, user));
+    }
   }
   return (
     <section key={order.id} className="border-t-4 border-black p-5">
@@ -137,6 +170,30 @@ export default function OrderCard({ order, reorderItem, user }) {
           </Link>
         </div>
       </div>
+      {replaceCart && cart && cart.restaurantDetails && (
+        <Modal>
+          <ReplaceItemsPopup
+            from={
+              cart.restaurantDetails.name == order.restaurant.name &&
+              cart.restaurantDetails.id !== order.restaurant.id
+                ? cart.restaurantDetails.name +
+                  ", " +
+                  cart.restaurantDetails.areaName
+                : cart.restaurantDetails.name
+            }
+            to={
+              cart.restaurantDetails.name == order.restaurant.name &&
+              cart.restaurantDetails.id !== order.restaurant.id
+                ? order.restaurant.name + ", " + order.restaurant.areaName
+                : order.restaurant.name
+            }
+            toggleHandler={replaceCartHandler}
+            user={user}
+            dishes={order.items}
+            restaurant={order.restaurant}
+          />
+        </Modal>
+      )}
     </section>
   );
 }

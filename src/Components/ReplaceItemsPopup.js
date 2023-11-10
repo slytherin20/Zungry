@@ -11,8 +11,9 @@ import {
   removeRestaurant,
 } from "../Store/CartSlice";
 import { addItemToStorage } from "../utils/localStorageItemHelpers";
+
 export function ReplaceItemsPopup({
-  dish,
+  dishes,
   from,
   to,
   toggleHandler,
@@ -20,20 +21,29 @@ export function ReplaceItemsPopup({
   restaurant,
   customizationModal,
 }) {
-  let sizeVariations = dish?.variantsV2?.variantGroups
-    ? dish?.variantsV2.variantGroups[0]?.variations
-    : null;
+  let sizeVariations;
+  if (!dishes?.length) {
+    sizeVariations = dishes?.variantsV2?.variantGroups
+      ? dishes?.variantsV2.variantGroups[0]?.variations
+      : null;
+  }
   const dispatch = useDispatch();
   async function replaceCartItems() {
     if (user) {
       await clearDB(user);
-      if (sizeVariations) {
-        toggleHandler();
-        customizationModal();
-      } else {
-        addToDBCart(dish, user);
+      if (dishes?.length) {
         addRestaurantToDB(restaurant, user);
+        dishes.map((dish) => addToDBCart(dish, user));
         toggleHandler();
+      } else {
+        if (sizeVariations) {
+          toggleHandler();
+          customizationModal();
+        } else {
+          addToDBCart(dishes, user);
+          addRestaurantToDB(restaurant, user);
+          toggleHandler();
+        }
       }
     } else {
       localStorage.clear();
@@ -43,8 +53,8 @@ export function ReplaceItemsPopup({
         toggleHandler();
         customizationModal();
       } else {
-        addItemToStorage(dish, restaurant);
-        dispatch(addItem(dish));
+        addItemToStorage(dishes, restaurant);
+        dispatch(addItem(dishes));
         dispatch(cartRestaurant(restaurant));
         toggleHandler();
       }
