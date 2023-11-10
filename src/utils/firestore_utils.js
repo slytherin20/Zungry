@@ -86,12 +86,7 @@ export async function createOrder(uid, orderId, items, restaurantInfo, amount) {
     let order = {
       id: orderId,
       items: items,
-      restaurant: {
-        id: restaurantInfo.id,
-        location: restaurantInfo.latLong,
-        name: restaurantInfo.name,
-        locality: restaurantInfo.locality,
-      },
+      restaurant: restaurantInfo,
       status: "pending",
       totalAmount: amount,
     };
