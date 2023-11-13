@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { loadStripe } from "@stripe/stripe-js";
 import { useState, useEffect } from "react";
-import { countSize } from "../utils/helper.js";
+import { calculateBillDetails } from "../utils/helper.js";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Elements } from "@stripe/react-stripe-js";
 import PaymentGatewayForm from "./PaymentGatewayForm";
@@ -19,21 +19,10 @@ export default function Checkout() {
   const navigate = useNavigate();
   useEffect(() => {
     if (user) {
-      let amountArr = cartItems.map((item) => {
-        if (item.selectedOptions?.size) {
-          let count = countSize(item.selectedOptions.size);
-          return (
-            count * ((item.defaultPrice ? item.defaultPrice : item.price) / 100)
-          );
-        } else
-          return (
-            ((item.defaultPrice ? item.defaultPrice : item.price) / 100) *
-            item.selectedQty
-          );
-      });
-      let amount = amountArr.reduce((amt, curr) => amt + curr, 0);
-      let delivery = restaurant?.feeDetails?.totalFee / 100 || 0;
-      let gst = (amount * 5) / 100;
+      let { amount, gst, delivery } = calculateBillDetails(
+        cartItems,
+        restaurant
+      );
       let totalRes = amount + gst + delivery + 3;
       setTotal(totalRes);
       let time = new Date().getTime();

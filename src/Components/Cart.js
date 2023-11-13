@@ -4,7 +4,7 @@ import { useOutletContext } from "react-router-dom";
 import { CLOUDANARY_API, STAR_ICON } from "../utils/constants";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { countSize } from "../utils/helper";
+import { calculateBillDetails } from "../utils/helper";
 
 function Cart() {
   let cartItems = useSelector((store) => store.cart.items);
@@ -15,21 +15,10 @@ function Cart() {
 
   useEffect(() => {
     if (cartItems.length) {
-      let amountArr = cartItems.map((item) => {
-        if (item.selectedOptions?.size) {
-          let count = countSize(item.selectedOptions.size);
-          return (
-            count * ((item.defaultPrice ? item.defaultPrice : item.price) / 100)
-          );
-        } else
-          return (
-            ((item.defaultPrice ? item.defaultPrice : item.price) / 100) *
-            item.selectedQty
-          );
-      });
-      let amount = amountArr.reduce((amt, curr) => amt + curr, 0);
-      let delivery = restaurant?.feeDetails?.totalFee / 100 || 0;
-      let gst = (amount * 5) / 100;
+      let { delivery, amount, gst } = calculateBillDetails(
+        cartItems,
+        restaurant
+      );
       setDetails({
         delivery,
         amount,
