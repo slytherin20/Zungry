@@ -28,7 +28,7 @@ function Cart() {
           );
       });
       let amount = amountArr.reduce((amt, curr) => amt + curr, 0);
-      let delivery = restaurant?.feeDetails?.totalFee / 100;
+      let delivery = restaurant?.feeDetails?.totalFee / 100 || 0;
       let gst = (amount * 5) / 100;
       setDetails({
         delivery,
@@ -108,10 +108,12 @@ function Cart() {
               <span>Item Total</span>
               <span className="w-28">₹{details?.amount?.toFixed(2)}</span>
             </p>
-            <p className="flex justify-between m-3">
-              <span>Delivery Charges</span>
-              <span className="w-28">₹{details?.delivery?.toFixed(2)}</span>
-            </p>
+            {details?.delivery ? (
+              <p className="flex justify-between m-3">
+                <span>Delivery Charges</span>
+                <span className="w-28">₹{details?.delivery?.toFixed(2)}</span>
+              </p>
+            ) : null}
             <p className="flex justify-between m-3">
               <span>Platform Fees</span>
               <span className="w-28">₹3.00</span>

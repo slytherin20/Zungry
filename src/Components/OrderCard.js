@@ -140,7 +140,7 @@ export default function OrderCard({ order, user }) {
         </div>
       </h3>
       <p className="text-base">{order.restaurant.locality}</p>
-      <p className="text-sm">₹{Math.round(order.totalAmount)}/-</p>
+      <p className="text-sm">₹{order.totalAmount.toFixed(2)}/-</p>
       <hr></hr>
       <div className="flex justify-between items-center w-full flex-wrap">
         <div>

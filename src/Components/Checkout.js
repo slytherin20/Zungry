@@ -32,7 +32,7 @@ export default function Checkout() {
           );
       });
       let amount = amountArr.reduce((amt, curr) => amt + curr, 0);
-      let delivery = restaurant?.feeDetails?.totalFee / 100;
+      let delivery = restaurant?.feeDetails?.totalFee / 100 || 0;
       let gst = (amount * 5) / 100;
       let totalRes = amount + gst + delivery + 3;
       setTotal(totalRes);
