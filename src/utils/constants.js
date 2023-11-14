@@ -164,3 +164,4 @@ export const SHOW_PASSWORD = "https://i.imgur.com/dxMu55L.png";
 export const HIDE_PASSWORD = "https://i.imgur.com/iAw2c8e.png";
 export const EMPTY_STAR = "https://i.imgur.com/FTDyAoD.png";
 export const FILLED_STAR = "https://i.imgur.com/A9VWdz8.png";
+export const LOCATION_PIN = "https://i.imgur.com/eIsRpKd.png";

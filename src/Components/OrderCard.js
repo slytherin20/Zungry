@@ -1,62 +1,21 @@
-import { EMPTY_STAR, FILLED_STAR } from "../utils/constants";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  addOrderRating,
-  addRestaurantToDB,
-  addToDBCart,
-} from "../utils/firestore_utils";
+import { addRestaurantToDB, addToDBCart } from "../utils/firestore_utils";
 import { useSelector } from "react-redux";
 import Modal from "./Modal";
 import { ReplaceItemsPopup } from "./ReplaceItemsPopup";
+import { OrderDetails } from "./OrderDetails";
+import RatingOrder from "./RatingOrder";
 
 export default function OrderCard({ order, user }) {
-  const [rating, setRating] = useState({
-    stars: {
-      1: false,
-      2: false,
-      3: false,
-      4: false,
-      5: false,
-    },
-    value: 0,
-  });
   const [replaceCart, setReplaceCart] = useState(false);
   const cart = useSelector((store) => store.cart);
   const [isReorder, setIsReorder] = useState(false);
+  const [details, setDetails] = useState(false);
   const navigate = useNavigate();
-  function changeHoveredStars(e) {
-    let id = e.target.id;
-    let obj = {};
-    [1, 2, 3, 4, 5].map((val) => {
-      if (val <= id) {
-        obj = {
-          ...obj,
-          [val]: true,
-        };
-      } else {
-        obj = {
-          ...obj,
-          [val]: false,
-        };
-      }
-    });
-    setRating({
-      stars: obj,
-      value: rating.value,
-    });
-  }
-  function clearHoveredStars() {
-    setRating({
-      stars: {
-        1: false,
-        2: false,
-        3: false,
-        4: false,
-        5: false,
-      },
-      value: rating.value,
-    });
+
+  function toggleDetailsHandler() {
+    setDetails(!details);
   }
 
   useEffect(() => {
@@ -65,19 +24,6 @@ export default function OrderCard({ order, user }) {
     }
   }, [cart.items]);
 
-  function addRating() {
-    let count = 0;
-    [1, 2, 3, 4, 5].forEach((val) => {
-      if (rating.stars[val]) {
-        count = count + 1;
-      }
-    });
-    setRating({
-      ...rating,
-      value: count,
-    });
-    addOrderRating(user, order.id, count);
-  }
   function replaceCartHandler() {
     setReplaceCart(!replaceCart);
   }
@@ -105,39 +51,7 @@ export default function OrderCard({ order, user }) {
       </p>
       <h3>
         <b>{order.restaurant.name}</b>
-        <div
-          className="flex w-28"
-          onClick={addRating}
-          onMouseOut={clearHoveredStars}
-        >
-          {order.rating || rating.value > 0
-            ? [1, 2, 3, 4, 5].map((val) => (
-                <img
-                  key={val}
-                  src={
-                    order.rating
-                      ? val <= order.rating
-                        ? FILLED_STAR
-                        : EMPTY_STAR
-                      : val <= rating.value
-                      ? FILLED_STAR
-                      : EMPTY_STAR
-                  }
-                  alt="rating star"
-                  className="h-4 w-4 pr-1"
-                />
-              ))
-            : [1, 2, 3, 4, 5].map((val) => (
-                <img
-                  key={val}
-                  src={rating.stars[val] ? FILLED_STAR : EMPTY_STAR}
-                  alt="rating star"
-                  className="h-4 w-4 pr-1"
-                  id={val}
-                  onMouseOver={changeHoveredStars}
-                />
-              ))}
-        </div>
+        <RatingOrder user={user} id={order.id} orderRating={order.rating} />
       </h3>
       <p className="text-base">{order.restaurant.locality}</p>
       <p className="text-sm">₹{order.totalAmount.toFixed(2)}/-</p>
@@ -160,14 +74,13 @@ export default function OrderCard({ order, user }) {
           >
             Reorder
           </button>
-          <Link to={"/orderDetails?id=" + order.id}>
-            <button
-              type="button"
-              className="text-white bg-red-700 rounded-md w-24 h-7 text-xs"
-            >
-              View Details {">>"}
-            </button>
-          </Link>
+          <button
+            type="button"
+            className="text-white bg-red-700 rounded-md w-24 h-7 text-xs"
+            onClick={toggleDetailsHandler}
+          >
+            View Details {">>"}
+          </button>
         </div>
       </div>
       {replaceCart && cart && cart.restaurantDetails && (
@@ -191,6 +104,15 @@ export default function OrderCard({ order, user }) {
             user={user}
             dishes={order.items}
             restaurant={order.restaurant}
+          />
+        </Modal>
+      )}
+      {details && (
+        <Modal>
+          <OrderDetails
+            order={order}
+            toggleDetails={toggleDetailsHandler}
+            user={user}
           />
         </Modal>
       )}
