@@ -7,7 +7,9 @@ import { Elements } from "@stripe/react-stripe-js";
 import PaymentGatewayForm from "./PaymentGatewayForm";
 import { createOrder } from "../utils/firestore_utils.js";
 import AddressView from "./AddressView.js";
+import { toast } from "react-toastify";
 const stripePromise = loadStripe(process.env.REACT_PUBLISHABLE_KEY);
+
 export default function Checkout() {
   const [, user] = useOutletContext();
   const cart = useSelector((store) => store.cart);
@@ -53,6 +55,8 @@ export default function Checkout() {
       let data = await res.json();
       setClientSecret(data.clientSecret);
     } catch (err) {
+      toast.error("Encountered unexpected error.Please try agin later!");
+      navigate("/");
       console.log("STRIPE ERROR: ", err.message);
     }
   }

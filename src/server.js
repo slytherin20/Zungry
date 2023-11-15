@@ -126,6 +126,7 @@ app.post(
         clientSecret: paymentIntent.client_secret,
       });
     } catch (err) {
+      console.log(err);
       res.status(400).send(err);
     }
   }

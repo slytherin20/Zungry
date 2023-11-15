@@ -39,7 +39,6 @@ import {
 } from "../utils/firestore_utils";
 import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../firebase_config";
-import Success from "./Success";
 import Account from "./Account";
 import { saveDetails } from "../Store/acountSlice";
 import OrdersList from "./OrdersList";
@@ -169,11 +168,7 @@ const appRouter = createBrowserRouter([
         element: <Checkout />,
         errorElement: <RouteError />,
       },
-      {
-        path: "success",
-        element: <Success />,
-        errorElement: <RouteError />,
-      },
+
       {
         path: "account",
         element: <Account />,

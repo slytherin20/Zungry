@@ -3,42 +3,16 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { useEffect } from "react";
 import { useState } from "react";
 import { LOADING_ICON } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function PaymentGatewayForm({ profileDetails }) {
   const stripe = useStripe();
   const elements = useElements();
-  const [msg, setMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  useEffect(() => {
-    if (!stripe) return;
-    let clientSecret = new URLSearchParams(window.location.search).get(
-      "payment_intent_client_secret"
-    );
-    if (!clientSecret) return;
-
-    stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
-      console.log("status", paymentIntent.status);
-      switch (paymentIntent.status) {
-        case "succeeded":
-          setMsg("Payment Successful");
-          break;
-        case "processing":
-          setMsg("Your payment is processing");
-          break;
-        case "requires_payment_method":
-          setMsg("Your payment was not successfull. Please try again!");
-          break;
-        case "canceled":
-          setMsg("Payment canceled");
-          break;
-      }
-    });
-  }, [stripe]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -48,15 +22,16 @@ export default function PaymentGatewayForm({ profileDetails }) {
 
     const result = await stripe.confirmPayment({
       elements,
-      confirmParams: {
-        return_url: "http://localhost:5000/success",
-      },
+      redirect: "if_required",
     });
     const err = result.error;
     if (err) {
       if (err.type == "card_error" || err.type == "validation_error")
-        setMsg(err.message);
-      else setMsg("An unexpected error occurred.");
+        toast.error(err.message);
+      else toast.error("Payment failed");
+    } else {
+      toast.success("Payment Successful!");
+      navigate("/");
     }
 
     setIsLoading(false);
@@ -83,7 +58,6 @@ export default function PaymentGatewayForm({ profileDetails }) {
           <span>Pay Now</span>
         )}
       </button>
-      {msg && <p>{msg}</p>}
     </form>
   );
 }
