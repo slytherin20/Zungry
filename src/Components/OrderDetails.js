@@ -24,17 +24,12 @@ export function OrderDetails({ order, toggleDetails, user }) {
         <div className="flex  relative before:content-[''] before:h-7 before:border-l-2 before:border-dashed before:border-slate-400 before:absolute before:top-5 before:left-2">
           <img src={LOCATION_PIN} alt="location icon" className="h-5 w-5" />
           <div>
-            <h1 className="flex items-center">
+            <h1>
               <Link to={"/restaurants/" + order.restaurant.id}>
                 <span className="mr-5 hover:text-red-700">
                   {order.restaurant.name}
                 </span>
               </Link>
-              <RatingOrder
-                user={user}
-                id={order.id}
-                orderRating={order.rating}
-              />
             </h1>
             <span className="text-sm text-gray-500">
               {order.restaurant.locality +
