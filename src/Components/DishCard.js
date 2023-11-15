@@ -70,7 +70,6 @@ export default function DishCard({ dish, restaurantInfo, user }) {
           cartRestaurantInfo.id &&
           cartRestaurantInfo.id !== restaurantInfo.id
         ) {
-          //notify user via popup of different restaurant
           replaceDishesModal();
         } else toggleModal();
       } else {
@@ -92,7 +91,6 @@ export default function DishCard({ dish, restaurantInfo, user }) {
           cartRestaurantInfo.id &&
           cartRestaurantInfo.id !== restaurantInfo.id
         ) {
-          //Notify user via popup.
           replaceDishesModal();
         } else toggleModal();
       } else {
@@ -102,7 +100,6 @@ export default function DishCard({ dish, restaurantInfo, user }) {
           cartRestaurantInfo.id &&
           cartRestaurantInfo.id !== restaurantInfo.id
         ) {
-          //Notify user via popup.
           replaceDishesModal();
         } else {
           addItemToStorage(dish, restaurantInfo);

@@ -5,6 +5,7 @@ import { saveAccountDetails } from "../utils/firestore_utils";
 import { CLOSE_BTN, EDIT_ICON, LOADING_ICON } from "../utils/constants";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 export default function Account() {
   const [, user] = useOutletContext();
@@ -66,11 +67,12 @@ export default function Account() {
           address: values.deliveryAddress || details.address,
         });
         if (!res) {
-          //notify : Unable to save details currently. Try again later.
-          console.log("Unable to save profile details");
+          toast.error(
+            "Unable to save details currently. Please try again later."
+          );
         } else {
           setLoading(false);
-          //notify: details saved.
+          toast.success("Account Details Saved!");
           navigate("/");
         }
       }

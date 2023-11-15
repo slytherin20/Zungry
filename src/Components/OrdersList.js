@@ -15,7 +15,7 @@ export default function OrdersList() {
       if (ordersList) setOrders(ordersList);
       else {
         console.log("Error", ordersList);
-        //notify error fetching orders
+        //display unable to proceed request component
       }
     }
   }, [user]);
