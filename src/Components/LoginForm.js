@@ -43,6 +43,7 @@ export default function LoginForm() {
           switch (e.code) {
             case "auth/user-not-found":
               toast.error("User not registered. Please signup.");
+              navigate("/signup");
               break;
             case "auth/wrong-password":
               toast.error("Incorrect Password");

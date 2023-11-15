@@ -6,9 +6,12 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { saveAccountDetails } from "../utils/firestore_utils";
 import { useState } from "react";
 import { SHOW_PASSWORD, HIDE_PASSWORD } from "../utils/constants";
+import { LOADING_ICON } from "../utils/constants";
+import { toast } from "react-toastify";
 export default function SignUp() {
   const [visiblePwd, setVisiblePwd] = useState(false);
   const [visibleCofirmPwd, setVisibleConfirmPwd] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -44,6 +47,7 @@ export default function SignUp() {
         .required("Required"),
     }),
     onSubmit: (values) => {
+      setIsLoading(true);
       createUser(values);
     },
   });
@@ -58,13 +62,24 @@ export default function SignUp() {
             last: formik.values.lastName,
             email: formik.values.email,
           });
+          setIsLoading(false);
           navigate("/account");
         } catch (err) {
-          console.log(err);
+          setIsLoading(false);
+          console.log(err.code);
         }
       })
-      .catch(() => {
-        //  notify("Error creating user. Please try again later.");
+      .catch((e) => {
+        setIsLoading(false);
+        switch (e.code) {
+          case "auth/email-already-in-use":
+            toast.error("User already exists. Please login.");
+            navigate("/login");
+            break;
+          default:
+            toast.error("Facing issue signing up. Please try again later.");
+            break;
+        }
       });
   }
   function changePwdVisibility() {
@@ -206,13 +221,24 @@ export default function SignUp() {
             {formik.errors.reenterPassword}
           </p>
         ) : null}
-        <button
-          type="submit"
-          className="bg-red-600 h-8 text-white rounded-md"
-          data-testid="signup-btn"
-        >
-          Sign Up
-        </button>
+        {isLoading ? (
+          <button
+            type="submit"
+            className="bg-red-600 text-white h-8 rounded-md flex justify-center items-center"
+          >
+            <div className="spinner w-5 h-5 animate-spin" id="spinner">
+              <img src={LOADING_ICON} alt="loading" width="20" height="20" />
+            </div>
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className="bg-red-600 h-8 text-white rounded-md"
+            data-testid="signup-btn"
+          >
+            Sign Up
+          </button>
+        )}
         <Link to="/login" data-testid="login-link">
           <p className="underline text-red-600 my-4">Existing User? Login!</p>
         </Link>
