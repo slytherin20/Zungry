@@ -102,7 +102,5 @@ describe("Cart functionality for dishes with customization options", () => {
     fireEvent.click(decrBtn);
     dishCount = item.queryByTestId("dish-btn");
     expect(dishCount).not.toBe(null);
-    let cartCount = item.getByTestId("cart-count");
-    expect(cartCount.innerHTML).toBe("0");
   });
 });

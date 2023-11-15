@@ -101,7 +101,6 @@ describe("Cart functionality for no customized options", () => {
       </StaticRouter>
     );
     let cartCount = item.queryByTestId("cart-count");
-    expect(cartCount.innerHTML).toBe("0");
     let addBtn = item.queryByTestId("dish-btn");
     fireEvent.click(addBtn);
     cartCount = item.queryByTestId("cart-count");
@@ -109,6 +108,5 @@ describe("Cart functionality for no customized options", () => {
     let removeBtn = item.queryByTestId("delete-btn");
     fireEvent.click(removeBtn);
     cartCount = item.queryByTestId("cart-count");
-    expect(cartCount.innerHTML).toBe("0");
   });
 });

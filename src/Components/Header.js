@@ -90,12 +90,14 @@ export default function Header({ searchResults, user }) {
           <div className="flex flex-col items-center relative">
             <img src={CART_ICON} alt="cart" className="w-6 h-6" />
             <span>Cart</span>
-            <div
-              data-testid="cart-count"
-              className="inline-block bg-black text-white absolute right-0 top-0 rounded-full text-xs text-center min-w-4 pl-0.5 pr-0.5"
-            >
-              {cartItems.length}
-            </div>
+            {cartItems.length > 0 && (
+              <div
+                data-testid="cart-count"
+                className="inline-block bg-black text-white absolute right-0 top-0 rounded-full text-xs text-center min-w-4 pl-0.5 pr-0.5"
+              >
+                {cartItems.length}
+              </div>
+            )}
           </div>
         </Link>
         {user ? (
