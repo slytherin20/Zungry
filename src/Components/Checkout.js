@@ -27,10 +27,10 @@ export default function Checkout() {
       setTotal(totalRes);
       let time = new Date().getTime();
       let orderId =
-        String(time).slice(4) +
+        String(time).slice(0, 4) +
         user.slice(0, 4) +
         cartItems.length +
-        String(time).slice(4);
+        String(time).slice(0, 4);
       fetchClientSecret(orderId);
       createOrder(user, orderId, cartItems, restaurant, totalRes);
     }
