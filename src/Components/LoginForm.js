@@ -3,10 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { HIDE_PASSWORD, SHOW_PASSWORD } from "../utils/constants";
+import { toast } from "react-toastify";
+import { LOADING_ICON } from "../utils/constants";
 export default function LoginForm() {
   const auth = getAuth();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const validate = (values) => {
     let errors = {};
     if (!values.email) errors.email = "*Required";
@@ -29,13 +32,24 @@ export default function LoginForm() {
     },
     validate,
     onSubmit: (values) => {
+      setIsLoading(true);
       signInWithEmailAndPassword(auth, values.email, values.password)
         .then(() => {
+          setIsLoading(false);
           navigate("/");
         })
-        .catch((err) => {
-          console.log(err);
-          //notify("error logging in!");
+        .catch((e) => {
+          setIsLoading(false);
+          switch (e.code) {
+            case "auth/user-not-found":
+              toast.error("User not registered. Please signup.");
+              break;
+            case "auth/wrong-password":
+              toast.error("Incorrect Password");
+              break;
+            default:
+              toast.error("Unknown error encountered.Try again later.");
+          }
         });
     },
   });
@@ -102,13 +116,25 @@ export default function LoginForm() {
             {formik.errors.password}
           </p>
         ) : null}
-        <button
-          type="submit"
-          className="bg-red-600 text-white h-8 rounded-md"
-          data-testid="login-btn"
-        >
-          Login
-        </button>
+        {isLoading ? (
+          <button
+            type="submit"
+            className="bg-red-600 text-white h-8 rounded-md flex justify-center items-center"
+          >
+            <div className="spinner w-5 h-5 animate-spin" id="spinner">
+              <img src={LOADING_ICON} alt="loading" width="20" height="20" />
+            </div>
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className="bg-red-600 text-white h-8 rounded-md"
+            data-testid="login-btn"
+          >
+            Login
+          </button>
+        )}
+
         <Link to="/signup">
           <p className="underline text-red-600 my-4">
             No Existing Account? Sign Up!

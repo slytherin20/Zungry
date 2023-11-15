@@ -43,7 +43,8 @@ import Success from "./Success";
 import Account from "./Account";
 import { saveDetails } from "../Store/acountSlice";
 import OrdersList from "./OrdersList";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function AppLayout() {
   const [searchVal, setSearchVal] = useState("");
   const [user, setUser] = useState(undefined);
@@ -199,6 +200,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <StrictMode>
     <Provider store={store}>
+      <ToastContainer />
       <RouterProvider router={appRouter} />
     </Provider>
   </StrictMode>
