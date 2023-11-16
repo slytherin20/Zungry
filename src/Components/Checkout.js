@@ -11,6 +11,7 @@ import PaymentGatewayForm from "./PaymentGatewayForm";
 import { createOrder } from "../utils/firestore_utils.js";
 import AddressView from "./AddressView.js";
 import { toast } from "react-toastify";
+
 const stripePromise = loadStripe(process.env.REACT_PUBLISHABLE_KEY);
 
 export default function Checkout() {
@@ -59,7 +60,7 @@ export default function Checkout() {
     }
   }
 
-  if (!user) return <h1>404-Not Found</h1>;
+  if (!user) navigate("/route-error");
   if (!cartItems.length || !profileDetails) return null;
   if (!profileDetails.mobile) navigate("/account");
   return (

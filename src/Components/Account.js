@@ -78,6 +78,7 @@ export default function Account() {
       }
     },
   });
+  if (!user) navigate("/route-error");
   return (
     <form
       onSubmit={formik.handleSubmit}
