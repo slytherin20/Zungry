@@ -165,3 +165,5 @@ export const HIDE_PASSWORD = "https://i.imgur.com/iAw2c8e.png";
 export const EMPTY_STAR = "https://i.imgur.com/FTDyAoD.png";
 export const FILLED_STAR = "https://i.imgur.com/A9VWdz8.png";
 export const LOCATION_PIN = "https://i.imgur.com/eIsRpKd.png";
+export const NOTFOUND_ICON = "https://i.imgur.com/ho8LPdo.png";
+export const ROUTE_ERROR = "https://i.imgur.com/oxDeiwf.png";
