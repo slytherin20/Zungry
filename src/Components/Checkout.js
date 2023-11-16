@@ -1,7 +1,10 @@
 import { useSelector } from "react-redux";
 import { loadStripe } from "@stripe/stripe-js";
 import { useState, useEffect } from "react";
-import { calculateBillDetails } from "../utils/helper.js";
+import {
+  calculateBillDetails,
+  generateOrderTrackingId,
+} from "../utils/helper.js";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Elements } from "@stripe/react-stripe-js";
 import PaymentGatewayForm from "./PaymentGatewayForm";
@@ -27,12 +30,7 @@ export default function Checkout() {
       );
       let totalRes = amount + gst + delivery + 3;
       setTotal(totalRes);
-      let time = new Date().getTime();
-      let orderId =
-        String(time).slice(0, 4) +
-        user.slice(0, 4) +
-        cartItems.length +
-        String(time).slice(0, 4);
+      let orderId = generateOrderTrackingId();
       fetchClientSecret(orderId);
       createOrder(user, orderId, cartItems, restaurant, totalRes);
     }

@@ -6,6 +6,7 @@ import Modal from "./Modal";
 import { ReplaceItemsPopup } from "./ReplaceItemsPopup";
 import { OrderDetails } from "./OrderDetails";
 import RatingOrder from "./RatingOrder";
+import { generateOrderTrackingId } from "../utils/helper";
 
 export default function OrderCard({ order, user }) {
   const [replaceCart, setReplaceCart] = useState(false);
@@ -29,6 +30,8 @@ export default function OrderCard({ order, user }) {
   }
   async function reorderItem() {
     setIsReorder(true);
+    let newOrderId = generateOrderTrackingId();
+    order.id = newOrderId;
     if (cart.items.length > 0) {
       if (cart.restaurantDetails.id == order.restaurant.id) {
         order.items.forEach((item) => addToDBCart(item, user));

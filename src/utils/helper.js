@@ -33,3 +33,14 @@ export function calculateBillDetails(items, restaurant) {
   let gst = (amount * 5) / 100;
   return { amount, delivery, gst };
 }
+
+export function generateOrderTrackingId() {
+  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let orderId = "";
+  let i = 0;
+  while (i < 15) {
+    orderId += chars.charAt(Math.random() * chars.length);
+    i++;
+  }
+  return orderId;
+}
