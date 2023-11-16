@@ -38,7 +38,7 @@ export default function OrdersList() {
               alt="A red colored bag for orders"
               className="w-32 h-32 rotate-142"
             />
-            <p className="text-xl w-full absolute bottom-20 left-24">
+            <p className="text-xl absolute bottom-20 left-24">
               No orders placed
             </p>
           </div>
