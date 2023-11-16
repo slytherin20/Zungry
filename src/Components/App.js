@@ -44,6 +44,7 @@ import { saveDetails } from "../Store/acountSlice";
 import OrdersList from "./OrdersList";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 function AppLayout() {
   const [searchVal, setSearchVal] = useState("");
   const [user, setUser] = useState(undefined);
@@ -78,8 +79,11 @@ function AppLayout() {
             let restaurant = JSON.parse(localStorage.getItem("restaurant"));
             restaurantName = doc.data();
             if (restaurant) {
-              if (restaurantName.id != restaurant.id) {
+              if (restaurantName && restaurantName.id != restaurant.id) {
                 clearDB(user);
+                addRestaurantToDB(restaurant, user);
+                localStorage.setItem("restaurant", "");
+              } else if (!restaurantName) {
                 addRestaurantToDB(restaurant, user);
                 localStorage.setItem("restaurant", "");
               }
