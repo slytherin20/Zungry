@@ -2,7 +2,6 @@ import { StrictMode, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Header from "./Header";
 import Body from "./Body";
-import Footer from "./Footer";
 import Checkout from "./Checkout";
 import {
   createBrowserRouter,
@@ -143,7 +142,6 @@ function AppLayout() {
     <UserLocationContext.Provider value={userLocation}>
       <Header searchResults={searchValHandler} user={user} />
       {isOnline ? <Outlet context={[searchVal, user]} /> : <OfflinePage />}
-      <Footer />
     </UserLocationContext.Provider>
   );
 }
