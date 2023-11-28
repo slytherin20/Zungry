@@ -44,3 +44,9 @@ export function generateOrderTrackingId() {
   }
   return orderId;
 }
+
+export function searchOnEnter(key, searchBtn) {
+  if (key == "Enter") {
+    searchBtn.current.click();
+  }
+}

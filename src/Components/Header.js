@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import {
@@ -13,12 +13,14 @@ import {
 
 import { auth } from "../../firebase_config";
 import { useSelector } from "react-redux";
+import { searchOnEnter } from "../utils/helper";
 
 export default function Header({ searchResults, user }) {
   const [search, setSearch] = useState("");
   let cartItems = [];
   cartItems = useSelector((store) => store.cart.items);
   const navigate = useNavigate();
+  const searchRef = useRef(null);
   function changeSearchVal(e) {
     setSearch(e.target.value);
   }
@@ -49,6 +51,7 @@ export default function Header({ searchResults, user }) {
           type="search"
           className="h-full rounded-lg w-11/12 p-1 outline-none "
           placeholder="Search for a restaurant"
+          onKeyDown={(e) => searchOnEnter(e.key, searchRef)}
           onChange={changeSearchVal}
           data-testid="search-bar"
           name="searchbar"
@@ -63,6 +66,7 @@ export default function Header({ searchResults, user }) {
           height="24"
           className="w-7 h-7"
           data-testid="search-btn"
+          ref={searchRef}
         />
       </div>
       <div className="flex text-sm">
