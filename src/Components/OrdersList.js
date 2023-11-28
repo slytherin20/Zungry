@@ -25,7 +25,8 @@ export default function OrdersList() {
     let order = orders.find((order) => order.id == orderId);
     console.log(order);
   }
-  if (!user) navigate("/route-error");
+  if (user === null) navigate("/route-error");
+  else if (!user) return null;
   if (err) return <SomethingWentWrong />;
   return (
     <article className="w-10/12 m-auto mt-8">
