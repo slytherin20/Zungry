@@ -38,7 +38,12 @@ export default function RestaurantList({ searchInput }) {
       </div>
     );
 
-  if (filteredList.length === 0) return <h3>No restaurants found</h3>;
+  if (filteredList.length === 0)
+    return (
+      <div className="w-full mt-52 flex justify-center items-center">
+        <h3 className="text-lg">No restaurants found</h3>
+      </div>
+    );
   return (
     <div className="m-2 sm:m-11">
       <h3 className="text-2xl">Restaurants</h3>
