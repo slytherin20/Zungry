@@ -1,8 +1,8 @@
 import { StrictMode, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Header from "./Header";
-import Body from "./Body";
 import Checkout from "./Checkout";
+import RestaurantList from "./RestaurantList";
 import {
   createBrowserRouter,
   Outlet,
@@ -152,7 +152,7 @@ const appRouter = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Body />,
+        element: <RestaurantList />,
       },
 
       {
