@@ -1,11 +1,9 @@
-import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import {
   CART_ICON,
   USER_ICON,
   FOOD_LOGO,
-  SEARCH_ICON,
   HOME_ICON,
   ORDER_ICON,
   LOGIN_LOGOUT_ICON,
@@ -13,17 +11,12 @@ import {
 
 import { auth } from "../../firebase_config";
 import { useSelector } from "react-redux";
-import { searchOnEnter } from "../utils/helper";
+import Search from "./Search";
 
 export default function Header({ searchResults, user }) {
-  const [search, setSearch] = useState("");
   let cartItems = [];
   cartItems = useSelector((store) => store.cart.items);
   const navigate = useNavigate();
-  const searchRef = useRef(null);
-  function changeSearchVal(e) {
-    setSearch(e.target.value);
-  }
 
   function logOutHandler() {
     auth.signOut();
@@ -46,29 +39,7 @@ export default function Header({ searchResults, user }) {
           alt="A man in red clothes with red helment riding a scooter for food delivery"
         />
       </div>
-      <div className="h-10 shadow-md rounded-lg flex flex-row items-center w-full sm:w-96">
-        <input
-          type="search"
-          className="h-full rounded-lg w-11/12 p-1 outline-none "
-          placeholder="Search for a restaurant"
-          onKeyDown={(e) => searchOnEnter(e.key, searchRef)}
-          onChange={changeSearchVal}
-          data-testid="search-bar"
-          name="searchbar"
-          id="searchbar"
-          autoComplete="on"
-        />
-        <img
-          src={SEARCH_ICON}
-          alt="search"
-          onClick={() => searchResults(search)}
-          width="24"
-          height="24"
-          className="w-7 h-7"
-          data-testid="search-btn"
-          ref={searchRef}
-        />
-      </div>
+      <Search searchResults={searchResults} />
       <div className="flex text-sm">
         <Link to="/" className="ml-1 mr-1 flex flex-col items-center">
           <img src={HOME_ICON} alt="go to home page" className="w-6 h-6" />

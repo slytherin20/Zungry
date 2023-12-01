@@ -50,3 +50,30 @@ export function searchOnEnter(key, searchBtn) {
     searchBtn.current.click();
   }
 }
+
+export function debounceResult(cb, delay = 500) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      cb(...args);
+    }, delay);
+  };
+}
+
+export async function fetchRecommendation(location, keyword) {
+  if (!keyword) return null;
+  let domain =
+    process.env.REACT_APP_ENV == "dev"
+      ? "http://localhost:3000"
+      : "https://zungryproxy.onrender.com";
+  let url = `${domain}/search?lat=${location.lat}&long=${location.long}&kwd=${keyword}`;
+  try {
+    let res = await fetch(url);
+    let recommendations = await res.json();
+    if (recommendations) return recommendations;
+    else throw new Error(res);
+  } catch (err) {
+    console.log(err);
+  }
+}
