@@ -6,13 +6,15 @@ import {
 import { SEARCH_ICON } from "../utils/constants";
 import { useState, useRef, useContext, useCallback, useMemo } from "react";
 import { UserLocationContext } from "../utils/UserLocationContext";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Search({ searchResults }) {
   const userLocation = useContext(UserLocationContext);
   const [search, setSearch] = useState("");
   const [recommendations, setRecommendations] = useState(null);
+  const [showRecommendations, setShowRecommendations] = useState(false);
   const searchRef = useRef(null);
+  const navigate = useNavigate();
 
   function changeSearchVal(e) {
     setSearch(e.target.value);
@@ -35,7 +37,15 @@ export default function Search({ searchResults }) {
     () => debounceResult(fetchResult),
     [fetchResult]
   );
-
+  function clearRecommendations() {
+    setTimeout(() => setShowRecommendations(false), 300);
+  }
+  function showRecommendationsDiv() {
+    setShowRecommendations(true);
+  }
+  function goToSearchResult(id) {
+    navigate("/restaurants/" + id);
+  }
   return (
     <div className="h-10 shadow-md rounded-lg  w-full sm:w-96 relative">
       <div className="flex flex-row items-center">
@@ -48,8 +58,10 @@ export default function Search({ searchResults }) {
           data-testid="search-bar"
           name="searchbar"
           id="searchbar"
-          autoComplete="on"
+          autoComplete="false"
           value={search}
+          onBlur={clearRecommendations}
+          onFocus={showRecommendationsDiv}
         />
         <img
           src={SEARCH_ICON}
@@ -62,19 +74,21 @@ export default function Search({ searchResults }) {
           ref={searchRef}
         />
       </div>
-      {recommendations && recommendations?.length > 0 && (
-        <ul className="recommendation absolute bg-white shadow-md top-6 w-full p-2 border-t-2 border-t-gray-200">
-          {recommendations.map((restaurant) => (
-            <Link
-              key={restaurant.id}
-              to={"/restaurants/" + restaurant.id}
-              className="p-2"
-            >
-              <li key={restaurant.id}>{restaurant.name}</li>
-            </Link>
-          ))}
-        </ul>
-      )}
+      {showRecommendations &&
+        recommendations &&
+        recommendations?.length > 0 && (
+          <ul className="recommendation absolute bg-white shadow-md top-6 w-full pt-2 pb-2 border-t-2 border-t-gray-200">
+            {recommendations.map((restaurant) => (
+              <li
+                className="p-2 hover:bg-slate-200 cursor-pointer restaurant-link"
+                key={restaurant.id}
+                onClick={() => goToSearchResult(restaurant.id)}
+              >
+                {restaurant.name}
+              </li>
+            ))}
+          </ul>
+        )}
     </div>
   );
 }
