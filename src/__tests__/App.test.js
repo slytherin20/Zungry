@@ -1,8 +1,9 @@
 import { fireEvent, render, waitFor, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
 import store from "../Store/store";
-import { StaticRouter } from "react-router-dom/server";
 import "@testing-library/jest-dom";
+import { StaticRouter } from "react-router-dom/server";
+import { useOutletContext } from "react-router-dom";
 jest.mock("firebase/auth", () => {
   return {
     getAuth: jest.fn().mockReturnValue({
@@ -10,6 +11,12 @@ jest.mock("firebase/auth", () => {
         uid: "123456xwtre",
       },
     }),
+  };
+});
+jest.mock("react-router-dom", () => {
+  return {
+    ...jest.requireActual("react-router-dom"),
+    useOutletContext: jest.fn(),
   };
 });
 import Header from "../Components/Header.js";
@@ -25,6 +32,7 @@ const mockGeolocation = {
   getCurrentPosition: jest.fn(),
 };
 global.navigator.geolocation = mockGeolocation;
+
 const searchFn = jest.fn((val) => val);
 let mockPosition = {
   coords: {
@@ -34,16 +42,17 @@ let mockPosition = {
 };
 
 describe("The landing page", () => {
-  test("The landing page should load corectly", async () => {
+  test("The landing page should load correctly", async () => {
     mockGeolocation.getCurrentPosition.mockImplementation((success) => {
       success(mockPosition);
     });
+    useOutletContext.mockReturnValue(["", ""]);
     const page = render(
       <StaticRouter>
         <Provider store={store}>
           <UserLocationContext.Provider value={mockPosition.coords}>
             <Header searchResults={searchFn} />
-            <RestaurantList searchInput="" />
+            <RestaurantList />
           </UserLocationContext.Provider>
         </Provider>
       </StaticRouter>
@@ -63,13 +72,14 @@ describe("The landing page", () => {
     mockGeolocation.getCurrentPosition.mockImplementation((success) => {
       success(mockPosition);
     });
+    useOutletContext.mockReturnValue(["", ""]);
 
     const { rerender } = render(
       <StaticRouter>
         <Provider store={store}>
           <UserLocationContext.Provider value={mockPosition.coords}>
             <Header searchResults={searchFn} />
-            <RestaurantList searchInput="" />
+            <RestaurantList />
           </UserLocationContext.Provider>
         </Provider>
       </StaticRouter>
@@ -77,6 +87,7 @@ describe("The landing page", () => {
     const inp = screen.getByTestId("search-bar");
     const searchBtn = screen.getByTestId("search-btn");
     let value = "burger";
+    useOutletContext.mockReturnValue([value, ""]);
     fireEvent.change(inp, {
       target: {
         value,
@@ -90,7 +101,7 @@ describe("The landing page", () => {
         <Provider store={store}>
           <UserLocationContext.Provider value={mockPosition.coords}>
             <Header searchResults={searchFn} />
-            <RestaurantList searchInput={value} />
+            <RestaurantList />
           </UserLocationContext.Provider>
         </Provider>
       </StaticRouter>

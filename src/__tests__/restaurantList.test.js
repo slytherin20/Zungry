@@ -6,7 +6,7 @@ import { restaurantDetails } from "../utils/api_endpoint";
 import "@testing-library/jest-dom";
 import RestaurantList from "../Components/RestaurantList";
 import { UserLocationContext } from "../utils/UserLocationContext";
-
+import { useOutletContext } from "react-router-dom";
 global.fetch = jest.fn(() => {
   return Promise.resolve({
     json: () => Promise.resolve(restaurantDetails),
@@ -16,6 +16,13 @@ const mockGeolocation = {
   getCurrentPosition: jest.fn(),
 };
 global.navigator.geolocation = mockGeolocation;
+
+jest.mock("react-router-dom", () => {
+  return {
+    ...jest.requireActual("react-router-dom"),
+    useOutletContext: jest.fn(),
+  };
+});
 
 test("Restaurants should be loaded", async () => {
   const mockPostion = {
@@ -27,11 +34,12 @@ test("Restaurants should be loaded", async () => {
   mockGeolocation.getCurrentPosition.mockImplementation((success) =>
     success(mockPostion)
   );
+  useOutletContext.mockReturnValue(["", ""]);
   const body = render(
     <StaticRouter>
       <Provider store={store}>
         <UserLocationContext.Provider value={mockPostion.coords}>
-          <RestaurantList searchInput="" />
+          <RestaurantList />
         </UserLocationContext.Provider>
       </Provider>
     </StaticRouter>
