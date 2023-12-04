@@ -77,3 +77,35 @@ export async function fetchRecommendation(location, keyword) {
     console.log(err);
   }
 }
+
+export default async function fetchLocationRecommendations(kwd) {
+  if (!kwd) return null;
+  let domain =
+    process.env.REACT_APP_ENV == "dev"
+      ? "http://localhost:3000"
+      : "https://zungryproxy.onrender.com";
+  let url = `${domain}/locationsearch?kwd=${kwd}`;
+  try {
+    let res = await fetch(url);
+    let recommendations = await res.json();
+    return recommendations?.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function fetchCoords(id) {
+  if (!id) return null;
+  let domain =
+    process.env.REACT_APP_ENV == "dev"
+      ? "http://localhost:3000"
+      : "https://zungryproxy.onrender.com";
+  let url = `${domain}/locateaddress?id=${id}`;
+  try {
+    let res = await fetch(url);
+    let coords = await res.json();
+    return coords;
+  } catch (err) {
+    console.log(err);
+  }
+}

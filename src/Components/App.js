@@ -23,6 +23,7 @@ import useUserLocation from "../utils/useUserLocation";
 import { UserLocationContext } from "../utils/UserLocationContext";
 import { auth } from "../../firebase_config";
 import { onAuthStateChanged } from "firebase/auth";
+import Homepage from "./Homepage";
 import {
   cartRestaurant,
   addAll,
@@ -47,11 +48,12 @@ import "react-toastify/dist/ReactToastify.css";
 function AppLayout() {
   const [searchVal, setSearchVal] = useState("");
   const [user, setUser] = useState(undefined);
+
   const navigate = useNavigate();
   const location = useLocation();
   const isOnline = useOnline();
-  const userLocation = useUserLocation();
   const dispatch = useDispatch();
+  let userLocation = useUserLocation();
 
   useEffect(() => {
     let authListener = onAuthStateChanged(auth, (user) => {
@@ -138,6 +140,7 @@ function AppLayout() {
     if (location != "/") navigate("/");
   }
 
+  if (!userLocation.lat || userLocation.lat == -1) return <Homepage />;
   return (
     <UserLocationContext.Provider value={userLocation}>
       <Header searchResults={searchValHandler} user={user} />
