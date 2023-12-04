@@ -37,6 +37,7 @@ export default function LocationSearch() {
 
   function changeInputVal(e) {
     setInp(e.target.value);
+    setIsVisible(false);
     recommendSearch(e.target.value);
   }
   async function selectLocation(id) {

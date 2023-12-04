@@ -11,23 +11,25 @@ import { useNavigate } from "react-router-dom";
 export default function Search({ searchResults }) {
   const userLocation = useContext(UserLocationContext);
   const [search, setSearch] = useState("");
-  const [recommendations, setRecommendations] = useState(null);
+  const [recommendations, setRecommendations] = useState([]);
   const [showRecommendations, setShowRecommendations] = useState(false);
   const searchRef = useRef(null);
   const navigate = useNavigate();
 
   function changeSearchVal(e) {
     setSearch(e.target.value);
+    setShowRecommendations(false);
     recommendSearch(e.target.value);
   }
 
   const fetchResult = useCallback(
     async (val) => {
       let res = await fetchRecommendation(userLocation, val);
+      setShowRecommendations(true);
       if (res) {
         setRecommendations(res);
       } else {
-        setRecommendations(null);
+        setRecommendations([]);
       }
     },
     [userLocation]
@@ -41,7 +43,7 @@ export default function Search({ searchResults }) {
     setTimeout(() => setShowRecommendations(false), 300);
   }
   function showRecommendationsDiv() {
-    setShowRecommendations(true);
+    if (search && recommendations.length > 0) setShowRecommendations(true);
   }
   function goToSearchResult(id) {
     navigate("/restaurants/" + id);
@@ -74,11 +76,10 @@ export default function Search({ searchResults }) {
           ref={searchRef}
         />
       </div>
-      {showRecommendations &&
-        recommendations &&
-        recommendations?.length > 0 && (
-          <ul className="recommendation absolute bg-white shadow-md top-6 w-full pt-2 pb-2 border-t-2 border-t-gray-200">
-            {recommendations.map((restaurant) => (
+      {showRecommendations && search && (
+        <ul className="recommendation absolute bg-white shadow-md top-6 w-full pt-2 pb-2 border-t-2 border-t-gray-200">
+          {recommendations && recommendations.length > 0 ? (
+            recommendations.map((restaurant) => (
               <li
                 className="p-2 hover:bg-slate-200 cursor-pointer restaurant-link"
                 key={restaurant.id}
@@ -86,9 +87,12 @@ export default function Search({ searchResults }) {
               >
                 {restaurant.name}
               </li>
-            ))}
-          </ul>
-        )}
+            ))
+          ) : (
+            <li className="p-2 text-center">No Results Found</li>
+          )}
+        </ul>
+      )}
     </div>
   );
 }
