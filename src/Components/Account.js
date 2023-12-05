@@ -103,7 +103,8 @@ export default function Account() {
   return (
     <form className="h-95 w-96 rounded-3xl border border-gray-200 font-sans lp m-auto mt-9 p-5 mb-12">
       <h1 className="text-lg font-bold mb-3 mt-3">Account Details</h1>
-      <div className="flex justify-between items-center">
+      <hr></hr>
+      <div className="flex justify-between items-center mb-3 mt-3">
         <label htmlFor="first" className="w-2/5">
           <b>First Name</b>
           <p>{details.first}</p>
@@ -113,10 +114,10 @@ export default function Account() {
           <p>{details.last}</p>
         </label>
       </div>
-      <label htmlFor="mobileNumber">
+      <label htmlFor="mobileNumber" className="block mb-3 mt-3">
         <p className="font-bold">Mobile Number</p>
         {editType.mobile ? (
-          <section className="update-mobile flex">
+          <section className="update-mobile flex w-full justify-between items-center">
             <input
               type="number"
               placeholder="Enter mobile number"
@@ -124,29 +125,32 @@ export default function Account() {
               id="mobile"
               onChange={changeInpHandler}
               onBlur={validateMobileNumber}
+              className="h-8 border-2 border-black"
             />
-            {loading.mobile ? (
-              <img src={LOADING_BLACK} className="w-4 h-4 animate-spin" />
-            ) : inpVals.mobile ? (
+            <div className="flex">
+              {loading.mobile ? (
+                <img src={LOADING_BLACK} className="w-4 h-4 animate-spin" />
+              ) : inpVals.mobile ? (
+                <img
+                  src={CHECK_ICON}
+                  alt="submit updating mobile number"
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => submitDetails("mobile")}
+                />
+              ) : null}
               <img
-                src={CHECK_ICON}
-                alt="submit updating mobile number"
-                className="w-4 h-4 cursor-pointer"
-                onClick={() => submitDetails("mobile")}
+                src={CLOSE_BTN}
+                alt="cancel updating mobile number"
+                className="w-4 h-4 cursor-pointer ml-3"
+                onClick={() => {
+                  clearError();
+                  changeMobileEditMode();
+                }}
               />
-            ) : null}
-            <img
-              src={CLOSE_BTN}
-              alt="cancel updating mobile number"
-              className="w-4 h-4 cursor-pointer"
-              onClick={() => {
-                clearError();
-                changeMobileEditMode();
-              }}
-            />
+            </div>
           </section>
         ) : (
-          <section className="display-saved-mobile flex">
+          <section className="display-saved-mobile flex w-full justify-between">
             <p>{details.mobile}</p>
             <img
               src={EDIT_ICON}
@@ -159,42 +163,45 @@ export default function Account() {
         {err && <p className="text-red-700">{err}</p>}
       </label>
 
-      <label htmlFor="email">
+      <label htmlFor="email" className="block mb-3 mt-3">
         <p className="font-bold">E-mail Address </p>
         <p>{details.email}</p>
       </label>
-      <label htmlFor="deliveryAddress">
+      <label htmlFor="deliveryAddress" className="block mb-3 mt-3">
         <p className="font-bold">Delivery Address</p>
         {editType.address ? (
-          <section className="update-address flex">
+          <section className="update-address  flex w-full justify-between items-center">
             <input
               type="text"
               placeholder="Enter delivery address"
               value={inpVals.address}
               id="address"
               onChange={changeInpHandler}
+              className="h-8  border-black border-2"
             />
-            {loading.address ? (
-              <img src={LOADING_BLACK} className="w-4 h-4 animate-spin" />
-            ) : (
-              inpVals.address && (
-                <img
-                  src={CHECK_ICON}
-                  alt="submit updating delivery address"
-                  className="w-4 h-4 cursor-pointer"
-                  onClick={() => submitDetails("address")}
-                />
-              )
-            )}
-            <img
-              src={CLOSE_BTN}
-              alt="cancel updating delivery address"
-              className="w-4 h-4 cursor-pointer"
-              onClick={changeAddressEditMode}
-            />
+            <div className="flex">
+              {loading.address ? (
+                <img src={LOADING_BLACK} className="w-4 h-4 animate-spin" />
+              ) : (
+                inpVals.address && (
+                  <img
+                    src={CHECK_ICON}
+                    alt="submit updating delivery address"
+                    className="w-4 h-4 cursor-pointer"
+                    onClick={() => submitDetails("address")}
+                  />
+                )
+              )}
+              <img
+                src={CLOSE_BTN}
+                alt="cancel updating delivery address"
+                className="w-4 h-4 cursor-pointer ml-4"
+                onClick={changeAddressEditMode}
+              />
+            </div>
           </section>
         ) : (
-          <section className="display-saved-address flex">
+          <section className="display-saved-address flex w-full justify-between">
             <p>{details.address}</p>
             <img
               src={EDIT_ICON}
