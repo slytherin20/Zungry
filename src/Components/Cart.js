@@ -12,7 +12,7 @@ function Cart() {
   let account = useSelector((store) => store.account.profileDetails);
   const [, user] = useOutletContext();
   const [details, setDetails] = useState({});
-  console.log(cartItems, restaurant);
+
   useEffect(() => {
     if (cartItems.length) {
       let { delivery, amount, gst } = calculateBillDetails(
