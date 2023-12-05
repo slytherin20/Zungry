@@ -168,3 +168,5 @@ export const LOCATION_PIN = "https://i.imgur.com/eIsRpKd.png";
 export const NOTFOUND_ICON = "https://i.imgur.com/ho8LPdo.png";
 export const ROUTE_ERROR = "https://i.imgur.com/oxDeiwf.png";
 export const EMPTY_BAG = "https://i.imgur.com/EFn6UDc.png";
+export const CHECK_ICON = "https://i.imgur.com/e2HOAdz.png";
+export const LOADING_BLACK = "https://i.imgur.com/zKl3BHY.png";
