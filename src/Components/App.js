@@ -76,17 +76,17 @@ function AppLayout() {
         let q = query(collection(db, "Users", user, "cart"));
         restListner = onSnapshot(
           doc(db, "Users", user, "restaurantInfo", "restaurant"),
-          (doc) => {
+          async (doc) => {
             let restaurant = JSON.parse(localStorage.getItem("restaurant"));
             restaurantName = doc.data();
             if (restaurant) {
               if (restaurantName && restaurantName.id != restaurant.id) {
-                clearDB(user);
+                await clearDB(user);
                 addRestaurantToDB(restaurant, user);
-                localStorage.setItem("restaurant", "");
+                localStorage.removeItem("restaurant");
               } else if (!restaurantName) {
                 addRestaurantToDB(restaurant, user);
-                localStorage.setItem("restaurant", "");
+                localStorage.removeItem("restaurant");
               }
             }
             dispatch(cartRestaurant(restaurantName));

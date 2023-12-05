@@ -15,7 +15,7 @@ export async function addToDBCart(item, userid) {
   if (docSnap.exists()) {
     updateCartItemInDB(userid, item.id, docSnap.data().selectedQty);
   } else {
-    item.selectedQty = 1;
+    item.selectedQty = item.selectedQty ? item.selectedQty : 1;
     await setDoc(doc(db, "Users", userid, "cart", item.id), item);
   }
 }
