@@ -12,7 +12,7 @@ function Cart() {
   let account = useSelector((store) => store.account.profileDetails);
   const [, user] = useOutletContext();
   const [details, setDetails] = useState({});
-
+  console.log(cartItems, restaurant);
   useEffect(() => {
     if (cartItems.length) {
       let { delivery, amount, gst } = calculateBillDetails(
@@ -26,7 +26,7 @@ function Cart() {
       });
     }
   }, [cartItems]);
-  if (!cartItems.length && !restaurant) return <section>Cart is empty</section>;
+  if (!cartItems.length || !restaurant) return <section>Cart is empty</section>;
   return (
     <article className="checkout-page flex p-5 flex-wrap justify-between">
       <div className="flex flex-col  w-2/4 border-2 border-slate-300 rounded-md ">
