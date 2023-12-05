@@ -24,9 +24,11 @@ export default function SignUp() {
     validationSchema: Yup.object({
       firstName: Yup.string()
         .max(20, "Maximum 20 characters allowed.")
+        .matches(/^[A-Za-z]+$/, "Only alphabets allowed")
         .required("Required"),
       lastName: Yup.string()
         .max(20, "Maximum 20 characters allowed.")
+        .matches(/^[A-Za-z]+$/, "Only alphabets allowed")
         .required("Required"),
       email: Yup.string()
         .email("Invalid E-mail Address")
