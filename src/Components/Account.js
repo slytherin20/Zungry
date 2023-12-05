@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 
 export default function Account() {
   const [, user] = useOutletContext();
+  const [err, setErr] = useState("");
   const [editType, setEditType] = useState({
     mobile: false,
     address: false,
@@ -41,8 +42,17 @@ export default function Account() {
       address: !editType.address,
     });
   }
-  function validateAddress() {}
-  function validateMobileNumber() {}
+  function clearError() {
+    setErr("");
+  }
+  function validateMobileNumber() {
+    if (!/^[6-9][0-9]{9}$/.test(inpVals.mobile)) {
+      setErr("Invalid Mobile Number");
+      return false;
+    }
+    clearError();
+    return true;
+  }
   function changeInpHandler(e) {
     setInpVals({
       ...inpVals,
@@ -55,6 +65,16 @@ export default function Account() {
       [type]: true,
     });
     //validateField
+    if (type == "mobile") {
+      let isValid = validateMobileNumber();
+      if (!isValid) {
+        setLoading({
+          ...loading,
+          mobile: false,
+        });
+        return;
+      }
+    }
 
     //Save details in db
     let obj = {
@@ -103,22 +123,26 @@ export default function Account() {
               value={inpVals.mobile ? inpVals.mobile : null}
               id="mobile"
               onChange={changeInpHandler}
+              onBlur={validateMobileNumber}
             />
             {loading.mobile ? (
               <img src={LOADING_BLACK} className="w-4 h-4 animate-spin" />
-            ) : (
+            ) : inpVals.mobile ? (
               <img
                 src={CHECK_ICON}
                 alt="submit updating mobile number"
                 className="w-4 h-4 cursor-pointer"
                 onClick={() => submitDetails("mobile")}
               />
-            )}
+            ) : null}
             <img
               src={CLOSE_BTN}
               alt="cancel updating mobile number"
               className="w-4 h-4 cursor-pointer"
-              onClick={changeMobileEditMode}
+              onClick={() => {
+                clearError();
+                changeMobileEditMode();
+              }}
             />
           </section>
         ) : (
@@ -132,6 +156,7 @@ export default function Account() {
             />
           </section>
         )}
+        {err && <p className="text-red-700">{err}</p>}
       </label>
 
       <label htmlFor="email">
@@ -145,7 +170,6 @@ export default function Account() {
             <input
               type="text"
               placeholder="Enter delivery address"
-              onBlur={validateAddress}
               value={inpVals.address}
               id="address"
               onChange={changeInpHandler}
@@ -153,12 +177,14 @@ export default function Account() {
             {loading.address ? (
               <img src={LOADING_BLACK} className="w-4 h-4 animate-spin" />
             ) : (
-              <img
-                src={CHECK_ICON}
-                alt="submit updating delivery address"
-                className="w-4 h-4 cursor-pointer"
-                onClick={() => submitDetails("address")}
-              />
+              inpVals.address && (
+                <img
+                  src={CHECK_ICON}
+                  alt="submit updating delivery address"
+                  className="w-4 h-4 cursor-pointer"
+                  onClick={() => submitDetails("address")}
+                />
+              )
             )}
             <img
               src={CLOSE_BTN}
