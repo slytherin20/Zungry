@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function useUserLocation() {
   const [location, setLocation] = useState({ lat: 0, long: 0 });
@@ -9,7 +10,7 @@ export default function useUserLocation() {
       let geoLocationAPI = navigator.geolocation;
       try {
         if (!geoLocationAPI)
-          throw new Error("Location unsupported for your current browser");
+          toast.error("Location unsupported for your current browser");
         else {
           geoLocationAPI.getCurrentPosition(
             (position) => {
@@ -20,7 +21,7 @@ export default function useUserLocation() {
               });
             },
             (err) => {
-              if (err.message == "User denied Geolocation") {
+              if (err.code == 1) {
                 let storage = localStorage.getItem("userLocation");
                 if (storage) {
                   let coords = JSON.parse(storage);
@@ -35,6 +36,7 @@ export default function useUserLocation() {
                   });
                 }
               } else {
+                toast.error("Something went wrong trying to fetch location!");
                 throw new Error(
                   "Something went wrong trying to fetch location!"
                 );
