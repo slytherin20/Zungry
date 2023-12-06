@@ -17,6 +17,9 @@ module.exports = {
       maxHeight: {
         vh: "90vh",
       },
+      maxWidth: {
+        half: "50%",
+      },
       rotate: {
         142: "142deg",
       },
