@@ -6,8 +6,8 @@ import {
 } from "../utils/constants";
 import { calculateBillDetails } from "../utils/helper";
 import { Link } from "react-router-dom";
-import RatingOrder from "./RatingOrder";
-export function OrderDetails({ order, toggleDetails, user }) {
+
+export function OrderDetails({ order, toggleDetails }) {
   let details = calculateBillDetails(order.items, order.restaurant);
   return (
     <article className="w-500 bg-white rounded-2xl p-5 max-h-vh overflow-auto">

@@ -148,7 +148,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), (req, res) => {
         handleSuccessfulOrderPlaced(paymentIntent.metadata);
       } catch (err) {
         console.log(
-          "Experienced unepected error while trying to add order:",
+          "Experienced unexpected error while trying to add order:",
           err.message
         );
         res.status(400).json({ error: err.message });
