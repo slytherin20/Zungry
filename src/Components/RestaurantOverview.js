@@ -27,7 +27,7 @@ export default function RestaurantOverview({
         className="h-52 w-64 sm:h-64 sm:w-80"
       />
       <div className="w-2/5 sm:w-2/3 text-white p-2">
-        <h1 className="text-4xl">{name}</h1>
+        <h1 className="text-3xl sm:text-4xl">{name}</h1>
         <p>{cuisine}</p>
         <p className="text-lg">{location}</p>
         <div>
