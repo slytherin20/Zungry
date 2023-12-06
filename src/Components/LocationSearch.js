@@ -56,7 +56,7 @@ export default function LocationSearch() {
   }
   return (
     <article className="w-full">
-      <section className="w-full">
+      <section className="w-full flex">
         <input
           type="text"
           className="h-10 border border-red-700 w-4/5 relative"
@@ -72,8 +72,9 @@ export default function LocationSearch() {
           Search
         </button>
       </section>
+
       {isVisibile && inp && (
-        <ul className="list-none p-1 shadow-lg w-2/5 absolute z-10 bg-white">
+        <ul className="list-none p-1 shadow-lg w-2/5 absolute z-10 bg-white max-[640px]:w-4/5">
           {recommendations.length > 0 ? (
             recommendations.map((obj) => (
               <li

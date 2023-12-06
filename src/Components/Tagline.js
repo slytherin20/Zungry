@@ -6,7 +6,7 @@ export default function Tagline() {
     "Match Today?",
     "Working Late?",
     "On a Diet?",
-    "Need a Quick Breakfast?",
+    "Quick Breakfast?",
     "Hungry?",
   ];
   const [index, setIndex] = useState(0);
@@ -20,6 +20,7 @@ export default function Tagline() {
   }, []);
 
   return (
-    <h1 className="text-5xl font-medium text-gray-950">{taglines[index]}</h1>
+    <h1 className="text-4xl  font-medium text-gray-950">{taglines[index]}</h1>
   );
 }
+//403px

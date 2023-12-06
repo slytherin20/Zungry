@@ -4,9 +4,9 @@ import Tagline from "./Tagline";
 
 export default function Homepage() {
   return (
-    <main className="flex flex-row h-screen">
-      <section className="w-1/2 p-3">
-        <div className="flex items-center flex-col-reverse sm:flex-row mt-24 mb-6">
+    <main className="flex flex-row h-screen ">
+      <section className={`w-1/2 p-3 max-[640px]:w-full bg-white`}>
+        <div className="flex items-center flex-col-reverse sm:flex-row mt-24 mb-12">
           <p
             className="text-5xl sm:text-4xl text-red-600"
             data-testid="app-name"
@@ -32,7 +32,7 @@ export default function Homepage() {
           <p>Change your browser settings to allow location access.</p>
         </div>
       </section>
-      <section className="w-1/2">
+      <section className="w-1/2 max-[640px]:hidden">
         <img
           src="https://i.imgur.com/5SVdmJf.jpg"
           alt="pizza"
