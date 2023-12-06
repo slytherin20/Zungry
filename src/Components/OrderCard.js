@@ -23,18 +23,18 @@ export default function OrderCard({ order, user }) {
     if (isReorder) {
       navigate("/cart");
     }
-  }, [cart.items]);
+  }, [cart]);
 
   function replaceCartHandler() {
     setReplaceCart(!replaceCart);
   }
   async function reorderItem() {
-    setIsReorder(true);
     let newOrderId = generateOrderTrackingId();
     order.id = newOrderId;
     if (cart.items.length > 0) {
       if (cart.restaurantDetails.id == order.restaurant.id) {
-        order.items.forEach((item) => addToDBCart(item, user));
+        order.items.forEach(async (item) => await addToDBCart(item, user));
+        navigate("/cart");
       } else {
         setReplaceCart(true);
       }
@@ -42,6 +42,7 @@ export default function OrderCard({ order, user }) {
       addRestaurantToDB(order.restaurant, user);
       order.items.forEach((item) => addToDBCart(item, user));
     }
+    setIsReorder(true);
   }
   return (
     <section key={order.id} className="border-t-4 border-black p-5">
@@ -54,7 +55,9 @@ export default function OrderCard({ order, user }) {
       </p>
       <h3>
         <b>{order.restaurant.name}</b>
-        <RatingOrder user={user} id={order.id} orderRating={order.rating} />
+        {order.status == "completed" && (
+          <RatingOrder user={user} id={order.id} orderRating={order.rating} />
+        )}
       </h3>
       <p className="text-base">{order.restaurant.locality}</p>
       <p className="text-sm">₹{order.totalAmount.toFixed(2)}/-</p>
@@ -69,21 +72,26 @@ export default function OrderCard({ order, user }) {
           </p>
           <p className="text-sm">{order.time}</p>
         </div>
+
         <div>
           <button
             type="button"
-            className="text-white bg-red-700 rounded-md w-24 h-7 text-xs  mr-5"
-            onClick={() => reorderItem(order.id)}
+            className={`text-white bg-red-700 rounded-md w-24 h-7 text-xs  ${
+              order.status === "completed" ? "mr-5" : ""
+            }`}
+            onClick={() => reorderItem()}
           >
             Reorder
           </button>
-          <button
-            type="button"
-            className="text-white bg-red-700 rounded-md w-24 h-7 text-xs"
-            onClick={toggleDetailsHandler}
-          >
-            View Details {">>"}
-          </button>
+          {order.status == "completed" && (
+            <button
+              type="button"
+              className="text-white bg-red-700 rounded-md w-24 h-7 text-xs"
+              onClick={toggleDetailsHandler}
+            >
+              View Details {">>"}
+            </button>
+          )}
         </div>
       </div>
       {replaceCart && cart && cart.restaurantDetails && (
