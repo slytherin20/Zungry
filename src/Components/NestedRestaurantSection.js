@@ -13,23 +13,23 @@ export default function NestedRestaurantSection({
   }
 
   return (
-    <div className="flex flex-row w-full justify-between">
-      <div className="flex flex-col justify-start items-start ">
+    <div className="flex flex-col sm:flex-row w-full justify-between">
+      <div className="flex flex-row sm:flex-col justify-start items-start ">
         {dishes.map((cat) => (
           <span
             key={cat.title}
             onClick={selectCategory}
             className={
               isVisibleCategory === cat.title
-                ? " m-2 font-bold cursor-pointer"
-                : "m-2 cursor-pointer"
+                ? " m-2 font-bold cursor-pointer   text-sm sm:text-base"
+                : "m-2 cursor-pointer   text-sm sm:text-base"
             }
           >
             {cat.title}
           </span>
         ))}
       </div>
-      <div className="w-3/5">
+      <div className="sm:w-3/5">
         {dishes
           .filter((cat) => cat.title === isVisibleCategory)?.[0]
           .itemCards.map((dish) => (

@@ -203,14 +203,16 @@ export default function DishCard({ dish, restaurantInfo, user }) {
               ₹{dish.price / 100}
             </p>
           )}
-          <button
-            onClick={toggleDetails}
-            className="p-1 border border-red-700 rounded-md text-black text-xs"
-            data-testid="details"
-          >
-            Details {">>"}
-          </button>
-          {showDetails && (
+          {dish.description && (
+            <button
+              onClick={toggleDetails}
+              className="p-1 border border-red-700 rounded-md text-black text-xs"
+              data-testid="details"
+            >
+              Details {">>"}
+            </button>
+          )}
+          {showDetails && dish.description && (
             <Modal>
               <section className="dish-desc bg-white rounded-md p-2 max-w-screen- shadow-md">
                 <p className="flex justify-end">
