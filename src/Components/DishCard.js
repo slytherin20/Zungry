@@ -206,6 +206,7 @@ export default function DishCard({ dish, restaurantInfo, user }) {
           <button
             onClick={toggleDetails}
             className="p-1 border border-red-700 rounded-md text-black text-xs"
+            data-testid="details"
           >
             Details {">>"}
           </button>

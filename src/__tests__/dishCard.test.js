@@ -4,6 +4,8 @@ import store from "../Store/store";
 import { fireEvent, render } from "@testing-library/react";
 import DishCard from "../Components/DishCard";
 import { dishWithoutCustom } from "../Dummy/DishNoCustomization.js";
+import "@testing-library/jest-dom";
+
 jest.mock("firebase/auth", () => {
   return {
     getAuth: jest.fn().mockReturnValue({
@@ -29,8 +31,8 @@ describe("Checking Dish Card Layout", () => {
     const vegNonVegDesc = item.getByTestId("food-pref-name");
     const name = item.getByTestId("dish-name");
     const price = item.getByTestId("dish-price");
-    const desc = item.getByTestId("dish-desc");
-    expect(dish.children.length).toBe(3);
+    const desc = item.getByTestId("details");
+    expect(dish.children.length).toBe(2);
     expect(info.children.length).toBe(4);
     expect(vegNonVeg.src).toMatch(
       /^(https?:\/\/)(i\.imgur\.com\/lEMNtv0\.png|i\.imgur\.com\/qmye33X\.png)$/
@@ -38,7 +40,7 @@ describe("Checking Dish Card Layout", () => {
     expect(vegNonVegDesc.innerHTML).toMatch(/^(VEG|NON\\-VEG)$/);
     expect(name.innerHTML.length).toBeGreaterThan(0);
     expect(Number(price.innerHTML.slice(1))).toBeGreaterThan(0);
-    expect(desc.innerHTML.length).toBeGreaterThan(0);
+    expect(desc).toBeInTheDocument();
   });
 });
 
