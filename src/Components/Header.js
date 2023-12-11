@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   CART_ICON,
   USER_ICON,
-  FOOD_LOGO,
   HOME_ICON,
   ORDER_ICON,
   LOGIN_LOGOUT_ICON,
@@ -12,6 +11,7 @@ import {
 import { auth } from "../../firebase_config";
 import { useSelector } from "react-redux";
 import Search from "./Search";
+import AppLogo from "./AppLogo";
 
 export default function Header({ searchResults, user }) {
   let cartItems = [];
@@ -28,17 +28,7 @@ export default function Header({ searchResults, user }) {
       className="flex w-full justify-between items-center shadow-md flex-col sm:flex-row p-2"
       data-testid="header"
     >
-      <div className="flex items-center flex-col-reverse sm:flex-row">
-        <p className="text-2xl sm:text-4xl text-red-600" data-testid="app-name">
-          Zungry
-        </p>
-        <img
-          src={FOOD_LOGO}
-          className="w-14 h-14"
-          data-testid="app-logo"
-          alt="A man in red clothes with red helment riding a scooter for food delivery"
-        />
-      </div>
+      <AppLogo isHomepage={false} />
       <Search searchResults={searchResults} />
       <div className="flex text-sm">
         <Link to="/" className="ml-1 mr-1 flex flex-col items-center">
