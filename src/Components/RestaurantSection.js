@@ -13,7 +13,7 @@ export default function RestaurantSection({
     toggleMenuSection(name);
   }
   return (
-    <section className="w-3/4 m-auto">
+    <section className="w-11/12  sm:w-3/4 m-auto">
       <p
         className={`text-lg flex flex-row justify-between m-3 mr-10 cursor-pointer ${
           visibleSection[items.title]

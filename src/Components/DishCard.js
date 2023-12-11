@@ -1,4 +1,5 @@
 import {
+  CLOSE_BTN,
   CLOUDANARY_API,
   NONVEG_LOGO,
   NOPHOTO,
@@ -37,6 +38,7 @@ export default function DishCard({ dish, restaurantInfo, user }) {
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [count, setCount] = useState(0);
   const [replaceDishes, setReplaceDishes] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
   let sizeVariations = dish?.variantsV2?.variantGroups
     ? dish?.variantsV2.variantGroups[0]?.variations
     : null;
@@ -117,6 +119,11 @@ export default function DishCard({ dish, restaurantInfo, user }) {
   function toggleModal() {
     setIsVisibleModal(!isVisibleModal);
   }
+
+  function toggleDetails() {
+    setShowDetails(!showDetails);
+  }
+
   function replaceDishesModal() {
     setReplaceDishes(!replaceDishes);
   }
@@ -164,7 +171,10 @@ export default function DishCard({ dish, restaurantInfo, user }) {
   if (!dish) return null;
   return (
     <div className="m-4 relative" data-testid="dish">
-      <div className="w-full flex justify-between m-8" data-testid="dish-card">
+      <div
+        className="w-full flex justify-between sm:m-8"
+        data-testid="dish-card"
+      >
         <div className="p-1 w-2/3" data-testid="dish-info">
           {dish.itemAttribute?.vegClassifier && (
             <div className="flex items-center text-sm">
@@ -185,7 +195,7 @@ export default function DishCard({ dish, restaurantInfo, user }) {
               </span>
             </div>
           )}
-          <h3 className="text-xl" data-testid="dish-name">
+          <h3 className="text-lg sm:text-xl" data-testid="dish-name">
             {dish.name}
           </h3>
           {dish.price && (
@@ -193,8 +203,27 @@ export default function DishCard({ dish, restaurantInfo, user }) {
               ₹{dish.price / 100}
             </p>
           )}
-
-          <p data-testid="dish-desc">{dish.description}</p>
+          <button
+            onClick={toggleDetails}
+            className="p-1 border border-red-700 rounded-md text-black text-xs"
+          >
+            Details {">>"}
+          </button>
+          {showDetails && (
+            <Modal>
+              <section className="dish-desc bg-white rounded-md p-2 max-w-screen- shadow-md">
+                <p className="flex justify-end">
+                  <img
+                    src={CLOSE_BTN}
+                    alt="close details"
+                    onClick={toggleDetails}
+                    className="w-4 h-4 cursor-pointer"
+                  />
+                </p>
+                <p>{dish.description}</p>
+              </section>
+            </Modal>
+          )}
           {replaceDishes && cartRestaurantInfo?.name && (
             <Modal>
               <ReplaceItemsPopup
@@ -223,48 +252,50 @@ export default function DishCard({ dish, restaurantInfo, user }) {
             </Modal>
           )}
         </div>
-        {dish.imageId ? (
-          <img
-            src={CLOUDANARY_API + dish.imageId}
-            alt="food"
-            width="150"
-            height="150"
-            className="w-28 h-28"
-            data-testid="dish-img"
-          />
-        ) : (
-          <img
-            src={NOPHOTO}
-            alt="picture not available"
-            width="150"
-            height="150"
-            className="w-36 h-36"
-            data-testid="dish-img"
-          />
-        )}
-        {count === 0 ? (
-          <button
-            className="absolute bg-red-500 text-white w-20 h-8 rounded-md bottom-0 right-5 text-sm
-          "
-            onClick={() => addToCart(dish)}
-            data-testid="dish-btn"
-          >
-            Add
-          </button>
-        ) : (
-          <div className="absolute bg-red-500 text-white w-20 h-8 rounded-md bottom-0 right-5 text-sm flex justify-evenly items-center">
-            <button onClick={() => addToCart(dish)} data-testid="inc-btn">
-              +
-            </button>
-            <span data-testid="dish-count">{count}</span>
+        <div className="relative">
+          {dish.imageId ? (
+            <img
+              src={CLOUDANARY_API + dish.imageId}
+              alt="food"
+              width="150"
+              height="150"
+              className="w-28 h-28"
+              data-testid="dish-img"
+            />
+          ) : (
+            <img
+              src={NOPHOTO}
+              alt="picture not available"
+              width="150"
+              height="150"
+              className="w-36 h-36"
+              data-testid="dish-img"
+            />
+          )}
+          {count === 0 ? (
             <button
-              onClick={() => removeFromCart(dish.id)}
-              data-testid="delete-btn"
+              className="absolute bg-red-500 text-white w-20 h-8 rounded-md bottom-0 right-5 text-sm
+          "
+              onClick={() => addToCart(dish)}
+              data-testid="dish-btn"
             >
-              -
+              Add
             </button>
-          </div>
-        )}
+          ) : (
+            <div className="absolute bg-red-500 text-white w-20 h-8 rounded-md bottom-0 right-5 text-sm flex justify-evenly items-center">
+              <button onClick={() => addToCart(dish)} data-testid="inc-btn">
+                +
+              </button>
+              <span data-testid="dish-count">{count}</span>
+              <button
+                onClick={() => removeFromCart(dish.id)}
+                data-testid="delete-btn"
+              >
+                -
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
