@@ -5,6 +5,7 @@ import { useState } from "react";
 import { HIDE_PASSWORD, SHOW_PASSWORD } from "../utils/constants";
 import { toast } from "react-toastify";
 import { LOADING_ICON } from "../utils/constants";
+import AppLogo from "./AppLogo";
 export default function LoginForm() {
   const auth = getAuth();
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -58,90 +59,93 @@ export default function LoginForm() {
     setPasswordVisible(!passwordVisible);
   }
   return (
-    <div className="w-96 h-96 rounded-3xl border border-gray-200 font-sans lp m-2">
-      <h1 className="text-center text-2xl">Login</h1>
-      <form
-        onSubmit={formik.handleSubmit}
-        className="flex flex-col w-10/12 m-auto"
-      >
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          className="h-8 mb-5 border border-gray-300 rounded-md outline-none"
-          placeholder="Enter your E-mail address"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          data-testid="email"
-          autoComplete="email"
-        />
-        {formik.touched.email && formik.errors.email ? (
-          <p className="text-red-600" data-testid="email-error">
-            {formik.errors.email}
-          </p>
-        ) : null}
-        <label htmlFor="password">Password</label>
-        <div className="flex h-8 mb-5 border border-gray-300 rounded-md outline-none items-center active:outline">
+    <div className="w-full h-screen flex justify-center items-center flex-col">
+      <AppLogo isHomepage={false} />
+      <div className=" h-96 rounded-3xl border border-gray-200 font-sans lp m-2">
+        <h1 className="text-center text-2xl">Login</h1>
+        <form
+          onSubmit={formik.handleSubmit}
+          className="flex flex-col w-10/12 m-auto"
+        >
+          <label htmlFor="email">Email</label>
           <input
-            type={passwordVisible ? "text" : "password"}
-            name="password"
-            id="password"
-            placeholder="Enter your password"
-            className="w-full"
-            value={formik.values.password}
+            type="email"
+            name="email"
+            id="email"
+            className="h-8 mb-5 border border-gray-300 rounded-md outline-none"
+            placeholder="Enter your E-mail address"
+            value={formik.values.email}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            data-testid="password"
-            autoComplete="current-password"
+            data-testid="email"
+            autoComplete="email"
           />
-          {passwordVisible ? (
-            <img
-              src={HIDE_PASSWORD}
-              alt="show password while typing"
-              onClick={changePwdVisibility}
-              className="w-6 h-6 mr-1"
+          {formik.touched.email && formik.errors.email ? (
+            <p className="text-red-600" data-testid="email-error">
+              {formik.errors.email}
+            </p>
+          ) : null}
+          <label htmlFor="password">Password</label>
+          <div className="flex h-8 mb-5 border border-gray-300 rounded-md outline-none items-center active:outline">
+            <input
+              type={passwordVisible ? "text" : "password"}
+              name="password"
+              id="password"
+              placeholder="Enter your password"
+              className="w-full"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              data-testid="password"
+              autoComplete="current-password"
             />
+            {passwordVisible ? (
+              <img
+                src={HIDE_PASSWORD}
+                alt="show password while typing"
+                onClick={changePwdVisibility}
+                className="w-6 h-6 mr-1"
+              />
+            ) : (
+              <img
+                src={SHOW_PASSWORD}
+                alt="hide password while typing"
+                onClick={changePwdVisibility}
+                className="w-6 h-6 mr-1"
+              />
+            )}
+          </div>
+          {formik.touched.password && formik.errors.password ? (
+            <p className="text-red-600" data-testid="password-error">
+              {formik.errors.password}
+            </p>
+          ) : null}
+          {isLoading ? (
+            <button
+              type="submit"
+              className="bg-red-600 text-white h-8 rounded-md flex justify-center items-center"
+            >
+              <div className="spinner w-5 h-5 animate-spin" id="spinner">
+                <img src={LOADING_ICON} alt="loading" width="20" height="20" />
+              </div>
+            </button>
           ) : (
-            <img
-              src={SHOW_PASSWORD}
-              alt="hide password while typing"
-              onClick={changePwdVisibility}
-              className="w-6 h-6 mr-1"
-            />
+            <button
+              type="submit"
+              className="bg-red-600 text-white h-8 rounded-md"
+              data-testid="login-btn"
+            >
+              Login
+            </button>
           )}
-        </div>
-        {formik.touched.password && formik.errors.password ? (
-          <p className="text-red-600" data-testid="password-error">
-            {formik.errors.password}
-          </p>
-        ) : null}
-        {isLoading ? (
-          <button
-            type="submit"
-            className="bg-red-600 text-white h-8 rounded-md flex justify-center items-center"
-          >
-            <div className="spinner w-5 h-5 animate-spin" id="spinner">
-              <img src={LOADING_ICON} alt="loading" width="20" height="20" />
-            </div>
-          </button>
-        ) : (
-          <button
-            type="submit"
-            className="bg-red-600 text-white h-8 rounded-md"
-            data-testid="login-btn"
-          >
-            Login
-          </button>
-        )}
 
-        <Link to="/signup">
-          <p className="underline text-red-600 my-4">
-            No Existing Account? Sign Up!
-          </p>
-        </Link>
-      </form>
+          <Link to="/signup">
+            <p className="underline text-red-600 my-4">
+              No Existing Account? Sign Up!
+            </p>
+          </Link>
+        </form>
+      </div>
     </div>
   );
 }
