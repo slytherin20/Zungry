@@ -118,7 +118,7 @@ export default function Customizations({
   }
   return (
     <div
-      className="w-3/5 h-96 bg-white rounded-md p-4"
+      className="w-full sm:w-3/5 sm:h-96 bg-white rounded-md p-4"
       data-testid="customization-menu"
     >
       <p className="h-8">

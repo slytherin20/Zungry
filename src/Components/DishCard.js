@@ -172,7 +172,7 @@ export default function DishCard({ dish, restaurantInfo, user }) {
   return (
     <div className="m-4 relative" data-testid="dish">
       <div
-        className="w-full flex justify-between sm:m-8"
+        className="w-full flex justify-between sm:m-4"
         data-testid="dish-card"
       >
         <div className="p-1 w-2/3" data-testid="dish-info">
@@ -214,7 +214,7 @@ export default function DishCard({ dish, restaurantInfo, user }) {
           )}
           {showDetails && dish.description && (
             <Modal>
-              <section className="dish-desc bg-white rounded-md p-2 max-w-screen- shadow-md">
+              <section className="dish-desc bg-white rounded-md p-2 max-w-full sm:max-w-screen-sm shadow-md">
                 <p className="flex justify-end">
                   <img
                     src={CLOSE_BTN}

@@ -28,8 +28,8 @@ function Cart() {
   }, [cartItems]);
   if (!cartItems.length || !restaurant) return <section>Cart is empty</section>;
   return (
-    <article className="checkout-page flex p-5 flex-wrap justify-between">
-      <div className="flex flex-col  w-2/4 border-2 border-slate-300 rounded-md ">
+    <article className="checkout-page flex p-5 flex-wrap justify-between sm:flex-row flex-col ">
+      <div className="flex flex-col  w-full sm:w-2/4 border-2 border-slate-300 rounded-md">
         <Link to={"/restaurants/" + restaurant.id}>
           <section className="restaurant flex mb-3">
             <img
@@ -89,7 +89,7 @@ function Cart() {
           ))}
         </section>
       </div>
-      <div className="bill-details w-2/5 p-6">
+      <div className="bill-details w-full sm:w-2/5 p-6">
         <section className="bil-info">
           <h1 className="text-lg">Bill Details</h1>
           <div className="border-t-2 flex flex-col ">
