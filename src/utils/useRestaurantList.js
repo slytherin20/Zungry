@@ -20,7 +20,7 @@ export default function useRestaurantList(userLocation) {
       let restaurantsData = await res.json();
 
       restaurantsData =
-        restaurantsData?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle
+        restaurantsData?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
           ?.restaurants || [];
       setRestaurantsList(restaurantsData);
     } catch (e) {
