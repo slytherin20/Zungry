@@ -21,7 +21,7 @@ jest.mock("react-router-dom", () => {
 });
 import Header from "../Components/Header.js";
 import RestaurantList from "../Components/RestaurantList.js";
-import { restaurantDetails } from "../utils/api_endpoint";
+import { restaurantDetails } from "../Dummy/api_endpoint.js";
 import { UserLocationContext } from "../utils/UserLocationContext";
 global.fetch = jest.fn(() => {
   return Promise.resolve({
@@ -115,6 +115,6 @@ describe("The landing page", () => {
     });
     const restList = screen.getByTestId("restaurants");
 
-    expect(restList.children.length).toBe(2);
+    expect(restList.children.length).toBe(3);
   });
 });

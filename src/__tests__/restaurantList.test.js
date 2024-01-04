@@ -2,7 +2,7 @@ import { StaticRouter } from "react-router-dom/server";
 import { Provider } from "react-redux";
 import store from "../Store/store";
 import { render, waitFor } from "@testing-library/react";
-import { restaurantDetails } from "../utils/api_endpoint";
+import { restaurantDetails } from "../Dummy/api_endpoint";
 import "@testing-library/jest-dom";
 import RestaurantList from "../Components/RestaurantList";
 import { UserLocationContext } from "../utils/UserLocationContext";
