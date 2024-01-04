@@ -3,8 +3,8 @@ import { toast } from "react-toastify";
 import fetchLocationRecommendations, {
   debounceResult,
   fetchCoords,
-} from "../utils/helper";
-import { LOCATION_PIN } from "../utils/constants";
+} from "../../utils/helper";
+import { LOCATION_PIN } from "../../utils/constants";
 import { useNavigate } from "react-router-dom";
 
 export default function LocationSearch() {

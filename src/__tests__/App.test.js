@@ -19,8 +19,8 @@ jest.mock("react-router-dom", () => {
     useOutletContext: jest.fn(),
   };
 });
-import Header from "../Components/Header.js";
-import RestaurantList from "../Components/RestaurantList.js";
+import Header from "../Components/Nav/Header.js";
+import RestaurantList from "../Components/RestaurantsList/RestaurantList.js";
 import { restaurantDetails } from "../Dummy/api_endpoint.js";
 import { UserLocationContext } from "../utils/UserLocationContext";
 global.fetch = jest.fn(() => {

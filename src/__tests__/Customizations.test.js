@@ -2,7 +2,7 @@ import { StaticRouter } from "react-router-dom/server";
 import { Provider } from "react-redux";
 import store from "../Store/store";
 import { fireEvent, render } from "@testing-library/react";
-import DishCard from "../Components/DishCard";
+import DishCard from "../Components/RestaurantMenu/DishCard";
 import { customDish } from "../Dummy/dishWithCustom";
 import { info } from "../Dummy/restaurantInfo";
 
@@ -16,7 +16,7 @@ jest.mock("firebase/auth", () => {
   };
 });
 
-import Header from "../Components/Header";
+import Header from "../Components/Nav/Header";
 
 describe("Cart functionality for dishes with customization options", () => {
   test("Customization popup opening", () => {

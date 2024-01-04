@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { addRestaurantToDB, addToDBCart } from "../utils/firestore_utils";
+import { addRestaurantToDB, addToDBCart } from "../../utils/firestore_utils";
 import { useSelector } from "react-redux";
-import Modal from "./Modal";
-import { ReplaceItemsPopup } from "./ReplaceItemsPopup";
+import Modal from "../Modal";
+import { ReplaceItemsPopup } from "../ReplaceItemsPopup";
 import { OrderDetails } from "./OrderDetails";
 import RatingOrder from "./RatingOrder";
-import { generateOrderTrackingId } from "../utils/helper";
+import { generateOrderTrackingId } from "../../utils/helper";
 
 export default function OrderCard({ order, user }) {
   const [replaceCart, setReplaceCart] = useState(false);

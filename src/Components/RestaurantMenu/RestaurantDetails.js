@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
-import RestaurantOverview from "./RestaurantOverview";
-import RestaurantDetailsShimmer from "./RestaurantDetailsShimmer";
-import useRestaurantMenu from "../utils/useRestaurantMenu.js";
-import RestaurantSection from "./RestaurantSection";
+import RestaurantOverview from "./RestaurantOverview.js";
+import RestaurantDetailsShimmer from "./RestaurantDetailsShimmer.js";
+import useRestaurantMenu from "../../utils/useRestaurantMenu.js";
+import RestaurantSection from "./RestaurantSection.js";
 import { useState, useEffect, useContext } from "react";
-import { UserLocationContext } from "../utils/UserLocationContext";
+import { UserLocationContext } from "../../utils/UserLocationContext.js";
 
 export default function RestaurantDetails() {
   const [isVisible, setIsVisible] = useState({});

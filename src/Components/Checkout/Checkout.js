@@ -4,11 +4,11 @@ import { useState, useEffect } from "react";
 import {
   calculateBillDetails,
   generateOrderTrackingId,
-} from "../utils/helper.js";
+} from "../../utils/helper.js";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { Elements } from "@stripe/react-stripe-js";
-import PaymentGatewayForm from "./PaymentGatewayForm";
-import { createOrder } from "../utils/firestore_utils.js";
+import PaymentGatewayForm from "./PaymentGatewayForm.js";
+import { createOrder } from "../../utils/firestore_utils.js";
 import AddressView from "./AddressView.js";
 import { toast } from "react-toastify";
 

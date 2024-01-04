@@ -18,7 +18,7 @@ jest.mock("firebase/auth", () => {
   };
 });
 jest.spyOn(router, "useNavigate").mockImplementation(() => jest.fn());
-import LoginForm from "../Components/LoginForm";
+import LoginForm from "../Components/AuthenticationForms/LoginForm";
 
 describe("Login form", () => {
   test("Empty login form should not submit and throw error at fields", async () => {

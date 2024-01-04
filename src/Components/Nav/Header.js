@@ -6,12 +6,12 @@ import {
   HOME_ICON,
   ORDER_ICON,
   LOGIN_LOGOUT_ICON,
-} from "../utils/constants";
+} from "../../utils/constants";
 
-import { auth } from "../../firebase_config";
+import { auth } from "../../../firebase_config";
 import { useSelector } from "react-redux";
 import Search from "./Search";
-import AppLogo from "./AppLogo";
+import AppLogo from "../AppLogo";
 
 export default function Header({ searchResults, user }) {
   let cartItems = [];

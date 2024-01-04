@@ -3,8 +3,8 @@ import {
   LOCATION_PIN,
   NONVEG_LOGO,
   VEG_LOGO,
-} from "../utils/constants";
-import { calculateBillDetails } from "../utils/helper";
+} from "../../utils/constants";
+import { calculateBillDetails } from "../../utils/helper";
 import { Link } from "react-router-dom";
 
 export function OrderDetails({ order, toggleDetails }) {

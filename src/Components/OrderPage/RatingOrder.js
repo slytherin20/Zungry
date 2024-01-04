@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { addOrderRating } from "../utils/firestore_utils";
-import { EMPTY_STAR, FILLED_STAR } from "../utils/constants";
+import { addOrderRating } from "../../utils/firestore_utils";
+import { EMPTY_STAR, FILLED_STAR } from "../../utils/constants";
 export default function RatingOrder({ user, id, orderRating }) {
   const [rating, setRating] = useState({
     stars: {

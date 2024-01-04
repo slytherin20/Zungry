@@ -2,10 +2,10 @@ import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { HIDE_PASSWORD, SHOW_PASSWORD } from "../utils/constants";
+import { HIDE_PASSWORD, SHOW_PASSWORD } from "../../utils/constants";
 import { toast } from "react-toastify";
-import { LOADING_ICON } from "../utils/constants";
-import AppLogo from "./AppLogo";
+import { LOADING_ICON } from "../../utils/constants";
+import AppLogo from "../AppLogo";
 export default function LoginForm() {
   const auth = getAuth();
   const [passwordVisible, setPasswordVisible] = useState(false);

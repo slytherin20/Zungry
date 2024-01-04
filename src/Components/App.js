@@ -1,8 +1,8 @@
 import { StrictMode, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
-import Header from "./Header";
-import Checkout from "./Checkout";
-import RestaurantList from "./RestaurantList";
+import Header from "./Nav/Header";
+import Checkout from "./Checkout/Checkout";
+import RestaurantList from "./RestaurantsList/RestaurantList";
 import {
   createBrowserRouter,
   Outlet,
@@ -11,11 +11,11 @@ import {
   useNavigate,
 } from "react-router-dom";
 import RouteError from "./RouteError";
-import RestaurantDetails from "./RestaurantDetails";
-import LoginForm from "./LoginForm";
+import RestaurantDetails from "./RestaurantMenu/RestaurantDetails";
+import LoginForm from "./AuthenticationForms/LoginForm";
 import useOnline from "../utils/useOnline";
 import OfflinePage from "./OfflinePage";
-import SignUp from "./SignUp";
+import SignUp from "./AuthenticationForms/SignUp";
 import { Provider } from "react-redux";
 import store from "../Store/store";
 import Cart from "./Cart";
@@ -23,7 +23,7 @@ import useUserLocation from "../utils/useUserLocation";
 import { UserLocationContext } from "../utils/UserLocationContext";
 import { auth } from "../../firebase_config";
 import { onAuthStateChanged } from "firebase/auth";
-import Homepage from "./Homepage";
+import Homepage from "./Homepage/Homepage";
 import {
   cartRestaurant,
   addAll,
@@ -41,7 +41,7 @@ import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../firebase_config";
 import Account from "./Account";
 import { saveDetails } from "../Store/acountSlice";
-import OrdersList from "./OrdersList";
+import OrdersList from "./OrderPage/OrdersList";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

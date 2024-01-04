@@ -1,14 +1,14 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../../firebase_config";
+import { auth } from "../../../firebase_config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { saveAccountDetails } from "../utils/firestore_utils";
+import { saveAccountDetails } from "../../utils/firestore_utils";
 import { useState } from "react";
-import { SHOW_PASSWORD, HIDE_PASSWORD } from "../utils/constants";
-import { LOADING_ICON } from "../utils/constants";
+import { SHOW_PASSWORD, HIDE_PASSWORD } from "../../utils/constants";
+import { LOADING_ICON } from "../../utils/constants";
 import { toast } from "react-toastify";
-import AppLogo from "./AppLogo";
+import AppLogo from "../AppLogo";
 export default function SignUp() {
   const [visiblePwd, setVisiblePwd] = useState(false);
   const [visibleCofirmPwd, setVisibleConfirmPwd] = useState(false);

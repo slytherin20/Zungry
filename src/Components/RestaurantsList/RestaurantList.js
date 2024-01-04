@@ -2,9 +2,9 @@ import RestaurantCard from "./RestaurantCard";
 import { useState, useEffect, useContext } from "react";
 import Shimmer from "./Shimmer";
 import { Link, useOutletContext } from "react-router-dom";
-import { filterData } from "../utils/helper";
-import useRestaurantList from "../utils/useRestaurantList";
-import { UserLocationContext } from "../utils/UserLocationContext";
+import { filterData } from "../../utils/helper";
+import useRestaurantList from "../../utils/useRestaurantList";
+import { UserLocationContext } from "../../utils/UserLocationContext";
 
 export default function RestaurantList() {
   const [searchInput] = useOutletContext();

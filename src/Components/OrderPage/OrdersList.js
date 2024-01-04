@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { getOrdersList } from "../utils/firestore_utils";
+import { getOrdersList } from "../../utils/firestore_utils";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import OrderCard from "./OrderCard";
-import SomethingWentWrong from "./SomethingWentWrong";
-import { EMPTY_BAG } from "../utils/constants";
+import SomethingWentWrong from "../SomethingWentWrong";
+import { EMPTY_BAG } from "../../utils/constants";
 
 export default function OrdersList() {
   const [orders, setOrders] = useState([]);

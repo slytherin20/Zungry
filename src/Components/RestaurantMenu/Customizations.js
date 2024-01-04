@@ -1,26 +1,26 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { CLOSE_BTN } from "../utils/constants";
+import { CLOSE_BTN } from "../../utils/constants";
 import {
   addItem,
   cartRestaurant,
   removeCustomizedItem,
   removeRestaurant,
   updateCustomizedItemCount,
-} from "../Store/CartSlice";
-import { countSize } from "../utils/helper";
+} from "../../Store/CartSlice";
+import { countSize } from "../../utils/helper";
 import {
   addItemToStorage,
   removeCustomItemFromStorage,
   updateCustomItemInStorage,
-} from "../utils/localStorageItemHelpers";
+} from "../../utils/localStorageItemHelpers";
 import {
   addRestaurantToDB,
   addToDBCart,
   deleteItemFromDB,
   deleteRestaurantFromDB,
   updateCustomizedItemInDB,
-} from "../utils/firestore_utils";
+} from "../../utils/firestore_utils";
 
 export default function Customizations({
   toggleModal,

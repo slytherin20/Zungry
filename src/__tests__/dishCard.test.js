@@ -2,7 +2,7 @@ import { StaticRouter } from "react-router-dom/server";
 import { Provider } from "react-redux";
 import store from "../Store/store";
 import { fireEvent, render } from "@testing-library/react";
-import DishCard from "../Components/DishCard";
+import DishCard from "../Components/RestaurantMenu/DishCard";
 import { dishWithoutCustom } from "../Dummy/DishNoCustomization.js";
 import "@testing-library/jest-dom";
 
@@ -15,7 +15,7 @@ jest.mock("firebase/auth", () => {
     }),
   };
 });
-import Header from "../Components/Header";
+import Header from "../Components/Nav/Header.js";
 describe("Checking Dish Card Layout", () => {
   test("All dish card elements are present", () => {
     let item = render(

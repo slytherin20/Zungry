@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import DishCard from "./DishCard";
+import DishCard from "./RestaurantMenu/DishCard";
 import { useOutletContext } from "react-router-dom";
 import { CLOUDANARY_API, STAR_ICON } from "../utils/constants";
 import { Link } from "react-router-dom";

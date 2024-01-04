@@ -18,7 +18,7 @@ jest.mock("firebase/auth", () => {
   };
 });
 jest.spyOn(router, "useNavigate").mockImplementation(() => jest.fn());
-import SignUp from "../Components/SignUp";
+import SignUp from "../Components/AuthenticationForms/SignUp";
 
 describe("Signup page", () => {
   test("Signup is loading correctly", () => {

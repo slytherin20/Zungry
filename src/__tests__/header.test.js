@@ -8,7 +8,7 @@ jest.mock("firebase/auth", () => {
     }),
   };
 });
-import Header from "../Components/Header.js";
+import Header from "../Components/Nav/Header.js";
 import { Provider } from "react-redux";
 import store from "../Store/store.js";
 import "@testing-library/jest-dom";

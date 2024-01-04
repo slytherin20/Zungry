@@ -4,7 +4,7 @@ import store from "../Store/store";
 import { render, waitFor } from "@testing-library/react";
 import { restaurantDetails } from "../Dummy/api_endpoint";
 import "@testing-library/jest-dom";
-import RestaurantList from "../Components/RestaurantList";
+import RestaurantList from "../Components/RestaurantsList/RestaurantList";
 import { UserLocationContext } from "../utils/UserLocationContext";
 import { useOutletContext } from "react-router-dom";
 global.fetch = jest.fn(() => {

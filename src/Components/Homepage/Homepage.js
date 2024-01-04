@@ -1,4 +1,4 @@
-import AppLogo from "./AppLogo";
+import AppLogo from "../AppLogo";
 import LocationSearch from "./LocationSearch";
 import Tagline from "./Tagline";
 

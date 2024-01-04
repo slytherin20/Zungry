@@ -2,10 +2,10 @@ import {
   searchOnEnter,
   fetchRecommendation,
   debounceResult,
-} from "../utils/helper";
-import { SEARCH_ICON } from "../utils/constants";
+} from "../../utils/helper";
+import { SEARCH_ICON } from "../../utils/constants";
 import { useState, useRef, useContext, useCallback, useMemo } from "react";
-import { UserLocationContext } from "../utils/UserLocationContext";
+import { UserLocationContext } from "../../utils/UserLocationContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Search({ searchResults }) {

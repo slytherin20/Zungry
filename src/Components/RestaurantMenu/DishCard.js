@@ -4,7 +4,7 @@ import {
   NONVEG_LOGO,
   NOPHOTO,
   VEG_LOGO,
-} from "../utils/constants";
+} from "../../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addItem,
@@ -13,26 +13,26 @@ import {
   updateItemCount,
   removeCustomizedItem,
   cartRestaurant,
-} from "../Store/CartSlice";
-import Modal from "./Modal";
+} from "../../Store/CartSlice";
+import Modal from "../Modal";
 import { useState } from "react";
 import Customizations from "./Customizations";
 import { useEffect } from "react";
-import { countSize } from "../utils/helper";
+import { countSize } from "../../utils/helper";
 
 import {
   addItemToStorage,
   removeCustomItemFromStorage,
   removeItemFromStorage,
-} from "../utils/localStorageItemHelpers";
+} from "../../utils/localStorageItemHelpers";
 import {
   addRestaurantToDB,
   addToDBCart,
   deleteItemFromDB,
   deleteRestaurantFromDB,
   updateCartItemInDB,
-} from "../utils/firestore_utils";
-import { ReplaceItemsPopup } from "./ReplaceItemsPopup";
+} from "../../utils/firestore_utils";
+import { ReplaceItemsPopup } from "../ReplaceItemsPopup";
 
 export default function DishCard({ dish, restaurantInfo, user }) {
   const [isVisibleModal, setIsVisibleModal] = useState(false);
