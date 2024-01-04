@@ -4,7 +4,7 @@ import Tagline from "./Tagline";
 
 export default function Homepage() {
   return (
-    <main className="flex flex-row h-screen ">
+    <main className="flex flex-row h-screen w-full">
       <section className={`w-1/2 p-3 max-[640px]:w-full bg-white`}>
         <AppLogo isHomepage={true} />
         <div className="mb-6">
