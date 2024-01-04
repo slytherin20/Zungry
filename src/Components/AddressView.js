@@ -2,10 +2,10 @@ import { Link } from "react-router-dom";
 export default function AddressView({ profileDetails }) {
   return (
     profileDetails && (
-      <section className="w-2/4">
-        <h1 className="font-bold text-lg w-2/4">Billing Address</h1>
-        <p>{profileDetails.address}</p>
-        <p>Mobile No.: {profileDetails.mobile}</p>
+      <section className="sm:w-2/4 p-2 flex flex-col items-center sm:items-start">
+        <h1 className="font-bold text-lg w-2/4 m-3">Billing Address</h1>
+        <p className="m-3">{profileDetails.address}</p>
+        <p className="m-3">Mobile No.: {profileDetails.mobile}</p>
         <Link to="/account">
           <button
             type="button"

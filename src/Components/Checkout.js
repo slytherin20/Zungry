@@ -64,10 +64,10 @@ export default function Checkout() {
   if (!cartItems.length || !profileDetails) return null;
   if (!profileDetails.mobile) navigate("/account");
   return (
-    <article className="checkout-page flex p-5">
+    <article className="checkout-page flex p-5 flex-wrap w-full max-w-full flex-col sm:flex-row">
       <AddressView profileDetails={profileDetails} />
-      <section className="w-2/4">
-        <p>
+      <section className="sm:w-2/4">
+        <p className="my-3">
           <b>Total Bill:</b> {total.toFixed(2)}
         </p>
         {clientSecret && (

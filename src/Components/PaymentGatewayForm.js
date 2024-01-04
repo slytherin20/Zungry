@@ -37,7 +37,11 @@ export default function PaymentGatewayForm({ profileDetails }) {
     setIsLoading(false);
   }
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
+    <form
+      id="payment-form"
+      onSubmit={handleSubmit}
+      className="flex flex-col items-center sm:items-start"
+    >
       <PaymentElement options={{ layout: "tabs" }} id="payment-element" />
       <button
         disabled={
@@ -48,7 +52,7 @@ export default function PaymentGatewayForm({ profileDetails }) {
           !profileDetails.address
         }
         type="submit"
-        className="w-60 h-8 text-white bg-blue-800 rounded-md flex justify-center items-center"
+        className="w-60 h-8 text-white bg-blue-800 rounded-md flex justify-center items-center my-4"
       >
         {isLoading || !stripe || !elements ? (
           <div className="spinner w-5 h-5 animate-spin" id="spinner">
