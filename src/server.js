@@ -53,7 +53,7 @@ function countSize(sizeTypes) {
   );
 }
 async function handleSuccessfulOrderPlaced(data) {
-  let time = new Date().toLocaleString();
+  let time = new Date().toLocaleString("en-GB"); //British date format: dd-mm-yyyy
   //Update order status to completed
   let profileDetails = db
     .collection("Users")
