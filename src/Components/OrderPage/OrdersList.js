@@ -21,10 +21,7 @@ export default function OrdersList() {
       }
     }
   }, [user]);
-  function reorderItemHandler(orderId) {
-    let order = orders.find((order) => order.id == orderId);
-    console.log(order);
-  }
+
   if (user === null) navigate("/route-error");
   else if (!user) return null;
   if (err) return <SomethingWentWrong />;
@@ -48,12 +45,7 @@ export default function OrdersList() {
       {orders.length > 0 && (
         <section>
           {orders.map((order) => (
-            <OrderCard
-              key={order.id}
-              order={order}
-              reorderItem={reorderItemHandler}
-              user={user}
-            />
+            <OrderCard key={order.id} order={order} user={user} />
           ))}
         </section>
       )}
