@@ -62,7 +62,7 @@ export default function OrderCard({ order, user }) {
       <p className="text-base">{order.restaurant.locality}</p>
       <p className="text-sm">₹{order.totalAmount.toFixed(2)}/-</p>
       <hr></hr>
-      <div className="flex justify-between items-center w-full flex-wrap">
+      <div className="flex sm:justify-between sm:items-center w-full flex-col sm:flex-row">
         <div>
           <p>
             {order.items.map((item, i) => {
@@ -73,7 +73,7 @@ export default function OrderCard({ order, user }) {
           <p className="text-sm">{order.time}</p>
         </div>
 
-        <div>
+        <div className={order.status == "completed" ? "w-56 flex" : ""}>
           <button
             type="button"
             className={`text-white bg-red-700 rounded-md w-24 h-7 text-xs  ${
