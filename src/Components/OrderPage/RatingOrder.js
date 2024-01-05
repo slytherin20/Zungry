@@ -12,7 +12,9 @@ export default function RatingOrder({ user, id, orderRating }) {
     },
     value: 0,
   });
+  const [isSubmmitted, setIsSubmitted] = useState(false);
   function changeHoveredStars(e) {
+    if (orderRating || isSubmmitted) return;
     let id = e.target.id;
     let obj = {};
     [1, 2, 3, 4, 5].map((val) => {
@@ -34,6 +36,7 @@ export default function RatingOrder({ user, id, orderRating }) {
     });
   }
   function clearHoveredStars() {
+    if (orderRating || isSubmmitted) return;
     setRating({
       stars: {
         1: false,
@@ -45,7 +48,8 @@ export default function RatingOrder({ user, id, orderRating }) {
       value: rating.value,
     });
   }
-  function addRating() {
+  function addRating(e) {
+    if (orderRating || isSubmmitted) return;
     let count = 0;
     [1, 2, 3, 4, 5].forEach((val) => {
       if (rating.stars[val]) {
@@ -56,11 +60,14 @@ export default function RatingOrder({ user, id, orderRating }) {
       ...rating,
       value: count,
     });
+    setIsSubmitted(true);
     addOrderRating(user, id, count);
+    e.preventDefault();
   }
   return (
     <div
       className="flex w-28"
+      onTouchEnd={addRating}
       onClick={addRating}
       onMouseOut={clearHoveredStars}
     >
@@ -89,6 +96,7 @@ export default function RatingOrder({ user, id, orderRating }) {
               className="h-4 w-4 pr-1"
               id={val}
               onMouseOver={changeHoveredStars}
+              onTouchStart={changeHoveredStars}
             />
           ))}
     </div>
