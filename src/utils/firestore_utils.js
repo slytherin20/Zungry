@@ -4,10 +4,10 @@ import {
   doc,
   getDoc,
   getDocs,
+  orderBy,
   query,
   setDoc,
   updateDoc,
-  where,
 } from "firebase/firestore";
 import { db } from "../../firebase_config.mjs";
 export async function addToDBCart(item, userid) {
@@ -112,9 +112,10 @@ export async function getOrdersList(uid) {
   try {
     let orders = [];
     let ordersRef = collection(db, "Users", uid, "orders");
-    const q = query(ordersRef, where("status", "!=", "pending"));
+    let q = query(ordersRef, orderBy("createdAt", "desc"));
     let docs = await getDocs(q);
     docs.forEach((doc) => orders.push(doc.data()));
+    orders = orders.filter((order) => order.status !== "pending");
     return orders;
   } catch (err) {
     console.log(err);

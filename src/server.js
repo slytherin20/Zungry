@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import path from "path";
 import { initializeApp, cert } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
+import { FieldValue, getFirestore } from "firebase-admin/firestore";
 import { fileURLToPath } from "url";
 dotenv.config();
 const serverPort = process.env.PORT || 5000;
@@ -53,7 +53,9 @@ function countSize(sizeTypes) {
   );
 }
 async function handleSuccessfulOrderPlaced(data) {
-  let time = new Date().toLocaleString("en-GB"); //British date format: dd-mm-yyyy
+  let date = new Date();
+  let time =
+    date.toLocaleDateString("en-GB") + ", " + date.toLocaleTimeString("en-US"); //British date format: dd-mm-yyyy
   //Update order status to completed
   let profileDetails = db
     .collection("Users")
@@ -71,6 +73,7 @@ async function handleSuccessfulOrderPlaced(data) {
   await orderRef.update({
     status: "completed",
     time,
+    createdAt: FieldValue.serverTimestamp(),
     profile: profile.data(),
   });
   //clear cart and restaurant
