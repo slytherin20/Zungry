@@ -19,5 +19,8 @@
 }
 * {
   box-sizing: border-box;
+}
+p,
+span {
   white-space: pre-wrap;
 }
