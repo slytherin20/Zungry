@@ -32,7 +32,7 @@ export default function NestedRestaurantSection({
       <div className="sm:w-3/5">
         {dishes
           .filter((cat) => cat.title === isVisibleCategory)?.[0]
-          .itemCards.map((dish) => (
+          ?.itemCards.map((dish) => (
             <DishCard
               dish={dish.card.info}
               key={dish.card.info.id}
