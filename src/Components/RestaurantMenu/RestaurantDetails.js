@@ -13,9 +13,9 @@ export default function RestaurantDetails() {
   let restaurantDetails = useRestaurantMenu(id, userLocation);
   useEffect(() => {
     restaurantDetails &&
-      restaurantDetails[2] &&
+      restaurantDetails[4] &&
       setMenuOptionsVisibility(
-        restaurantDetails[2].groupedCard.cardGroupMap.REGULAR.cards
+        restaurantDetails[4].groupedCard.cardGroupMap.REGULAR.cards
       );
     function setMenuOptionsVisibility(cards) {
       let temp = {};
@@ -30,10 +30,10 @@ export default function RestaurantDetails() {
   }, [restaurantDetails]);
 
   let restaurantInfo = restaurantDetails
-    ? restaurantDetails[0]?.card?.card?.info
+    ? restaurantDetails[2]?.card?.card?.info
     : null;
   let restaurantMenu = restaurantDetails
-    ? restaurantDetails[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards
+    ? restaurantDetails[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards
     : undefined;
   let cuisines = restaurantInfo?.cuisines
     ? restaurantInfo?.cuisines?.join(", ")
