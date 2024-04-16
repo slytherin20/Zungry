@@ -146,8 +146,7 @@ export const restaurants = [
     },
   },
 ];
-export const CLOUDANARY_API =
-  "https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_508,h_320,c_fill/";
+export const CLOUDANARY_API ="https://media-assets.swiggy.com/swiggy/image/upload/";
 export const SEARCH_ICON = "https://i.imgur.com/FM3Dq4E.png";
 export const STAR_ICON = "https://i.imgur.com/pNmas09.png";
 export const NOPHOTO = "https://i.imgur.com/QeSb355.png";
