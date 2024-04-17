@@ -105,6 +105,7 @@ export default function LoginForm() {
                 alt="show password while typing"
                 onClick={changePwdVisibility}
                 className="w-6 h-6 mr-1"
+                data-testid="show-password"
               />
             ) : (
               <img
@@ -112,6 +113,7 @@ export default function LoginForm() {
                 alt="hide password while typing"
                 onClick={changePwdVisibility}
                 className="w-6 h-6 mr-1"
+                data-testid="hide-password"
               />
             )}
           </div>
