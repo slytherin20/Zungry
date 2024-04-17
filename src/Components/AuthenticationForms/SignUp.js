@@ -177,6 +177,7 @@ export default function SignUp() {
                 alt="show password while typing"
                 onClick={changePwdVisibility}
                 className="w-6 h-6 mr-1"
+                data-testid="show-password"
               />
             ) : (
               <img
@@ -184,6 +185,7 @@ export default function SignUp() {
                 alt="hide password while typing"
                 onClick={changePwdVisibility}
                 className="w-6 h-6 mr-1"
+                data-testid="hide-password"
               />
             )}
           </div>
@@ -211,6 +213,7 @@ export default function SignUp() {
                 alt="show password while typing"
                 onClick={changeConfirmPwdVisibility}
                 className="w-6 h-6 mr-1"
+                data-testid="show-repassword"
               />
             ) : (
               <img
@@ -218,6 +221,7 @@ export default function SignUp() {
                 alt="hide password while typing"
                 onClick={changeConfirmPwdVisibility}
                 className="w-6 h-6 mr-1"
+                data-testid="hide-repassword"
               />
             )}
           </div>

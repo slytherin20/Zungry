@@ -1,6 +1,4 @@
 import { StaticRouter } from "react-router-dom/server";
-import { Provider } from "react-redux";
-import store from "../Store/store";
 import { fireEvent, render, waitFor,screen } from "@testing-library/react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { ToastContainer } from "react-toastify";
@@ -37,9 +35,9 @@ describe("Login form", () => {
   test("Empty login form should not submit and throw error at fields", async () => {
     let form = render(
       <StaticRouter>
-        <Provider store={store}>
+      
           <LoginForm />
-        </Provider>
+     
       </StaticRouter>
     );
 
@@ -53,9 +51,9 @@ describe("Login form", () => {
   test("Empty email field should throw error on blur", async () => {
     let form = render(
       <StaticRouter>
-        <Provider store={store}>
+       
           <LoginForm />
-        </Provider>
+    
       </StaticRouter>
     );
     let email = form.queryByTestId("email");
@@ -68,9 +66,9 @@ describe("Login form", () => {
   test("Empty password field should throw on blur", async () => {
     let form = render(
       <StaticRouter>
-        <Provider store={store}>
+       
           <LoginForm />
-        </Provider>
+      
       </StaticRouter>
     );
 
@@ -85,9 +83,9 @@ describe("Login form", () => {
   test("Submit should work when all fields are filled", async () => {
     let form = render(
       <StaticRouter>
-        <Provider store={store}>
+       
           <LoginForm />
-        </Provider>
+     
       </StaticRouter>
     );
     let email = form.queryByTestId("email");
@@ -120,9 +118,9 @@ describe("Login form", () => {
   test("Submit should not work when email fails validation", async () => {
     let form = render(
       <StaticRouter>
-        <Provider store={store}>
+     
           <LoginForm />
-        </Provider>
+        
       </StaticRouter>
     );
     let email = form.queryByTestId("email");
@@ -153,9 +151,9 @@ describe("Login form", () => {
   test("Submit should not work when password fails validation", async () => {
     let form = render(
       <StaticRouter>
-        <Provider store={store}>
+      
           <LoginForm />
-        </Provider>
+     
       </StaticRouter>
     );
     let email = form.queryByTestId("email");
@@ -184,10 +182,10 @@ describe("Login form", () => {
   test('Incorrect email address',async ()=>{
     let form = render(
       <StaticRouter>
-        <Provider store={store}>
+        
           <ToastContainer />
           <LoginForm />
-        </Provider>
+      
       </StaticRouter>
     );
     let email = form.queryByTestId('email');
@@ -211,10 +209,10 @@ describe("Login form", () => {
   test('Incorrect password entered',async ()=>{
     let form = render(
       <StaticRouter>
-        <Provider store={store}>
+       
           <ToastContainer />
           <LoginForm />
-        </Provider>
+      
       </StaticRouter>
     );
     let email = form.queryByTestId('email');
@@ -238,9 +236,9 @@ describe("Login form", () => {
   test('Show and hide password',async ()=>{
     let form = render(
       <StaticRouter>
-        <Provider store={store}>
+       
           <LoginForm />
-        </Provider>
+      
       </StaticRouter>
     );
     let hidePassword = form.getByTestId('hide-password');

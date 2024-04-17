@@ -1,10 +1,14 @@
 import { StaticRouter } from "react-router-dom/server";
-import { Provider } from "react-redux";
-import store from "../Store/store";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import * as router from "react-router";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+
 import "@testing-library/jest-dom";
+jest.mock('../utils/firestore_utils',()=>{
+  return {
+    saveAccountDetails: jest.fn(()=> Promise.resolve)
+  }
+})
 jest.mock("firebase/auth", () => {
   return {
     getAuth: jest.fn().mockReturnValue({
@@ -12,21 +16,33 @@ jest.mock("firebase/auth", () => {
         uid: "123456xwtre",
       },
     }),
-    createUserWithEmailAndPassword: jest.fn(() => {
-      return Promise.resolve();
+    createUserWithEmailAndPassword: jest.fn((auth,email,password) => {
+      if(email==='test123@test.com') return Promise.reject({
+        code:'auth/email-already-in-use'
+      })
+      else if(auth.currentUser.uid=='123456xwtre' && email=='john.doe@gmail.com' && password=='John.doe8@8'){
+        return Promise.resolve({
+          code:'auth/user-created'
+        })
+      }
+      else{
+        return Promise.reject({
+          code:'Unknow error occured'
+        })
+      }
     }),
   };
 });
 jest.spyOn(router, "useNavigate").mockImplementation(() => jest.fn());
+// global.saveAccountDetails = jest.fn();
 import SignUp from "../Components/AuthenticationForms/SignUp";
+import { ToastContainer } from "react-toastify";
 
 describe("Signup page", () => {
   test("Signup is loading correctly", () => {
     let signup = render(
       <StaticRouter>
-        <Provider store={store}>
           <SignUp />
-        </Provider>
       </StaticRouter>
     );
 
@@ -49,9 +65,7 @@ describe("Signup page", () => {
   test("Validation for empty form", async () => {
     let signup = render(
       <StaticRouter>
-        <Provider store={store}>
           <SignUp />
-        </Provider>
       </StaticRouter>
     );
     let signupBtn = signup.getByTestId("signup-btn");
@@ -70,9 +84,7 @@ describe("Signup page", () => {
   test("Validation for Name field", async () => {
     let signup = render(
       <StaticRouter>
-        <Provider store={store}>
           <SignUp />
-        </Provider>
       </StaticRouter>
     );
 
@@ -135,9 +147,7 @@ describe("Signup page", () => {
   test("Validation for E-mail field", async () => {
     let signup = render(
       <StaticRouter>
-        <Provider store={store}>
           <SignUp />
-        </Provider>
       </StaticRouter>
     );
 
@@ -221,9 +231,7 @@ describe("Signup page", () => {
   test("Validation for Password field", async () => {
     let page = render(
       <StaticRouter>
-        <Provider store={store}>
           <SignUp />
-        </Provider>
       </StaticRouter>
     );
 
@@ -258,9 +266,7 @@ describe("Signup page", () => {
   test("Submit function is working correctly", async () => {
     let signup = render(
       <StaticRouter>
-        <Provider store={store}>
           <SignUp />
-        </Provider>
       </StaticRouter>
     );
 
@@ -302,7 +308,7 @@ describe("Signup page", () => {
     let submitBtn = signup.getByTestId("signup-btn");
 
     fireEvent.click(submitBtn);
-
+ 
     await waitFor(() => {
       expect(createUserWithEmailAndPassword).toBeCalledWith(
         {
@@ -316,4 +322,138 @@ describe("Signup page", () => {
       expect(createUserWithEmailAndPassword).toHaveBeenCalledTimes(1);
     });
   });
+  test('Email already exists should show error',async()=>{
+let form = render(
+  <StaticRouter>
+      <ToastContainer />
+      <SignUp />
+  </StaticRouter>
+)
+  let firstName = form.getByTestId("first");
+let lastName = form.getByTestId("last");
+let email = form.getByTestId("email");
+let password = form.getByTestId("password");
+let reenterPassword = form.getByTestId("repassword");
+fireEvent.change(firstName,{
+  target:{
+    value:'John'
+  }
+})
+fireEvent.blur(firstName);
+fireEvent.change(lastName, {
+  target: {
+    value: "Doe",
+  },
+});
+fireEvent.blur(lastName);
+fireEvent.change(email, {
+  target: {
+    value: "test123@test.com",
+  },
+});
+fireEvent.blur(email);
+fireEvent.change(password, {
+  target: {
+    value: "John.doe8@8",
+  },
+});
+fireEvent.blur(password);
+fireEvent.change(reenterPassword, {
+  target: {
+    value: "John.doe8@8",
+  },
+});
+fireEvent.blur(reenterPassword);
+let submitBtn = form.getByTestId("signup-btn");
+fireEvent.click(submitBtn);
+await waitFor(()=>{
+  expect(form.getByText('User already exists. Please login.'))
+})
+
+  })
+  test('Unknown error occured while signing up',async ()=>{
+    let form = render(
+      <StaticRouter>
+          <ToastContainer />
+          <SignUp />
+      </StaticRouter>
+    )
+  
+      let firstName = form.getByTestId("first");
+    let lastName = form.getByTestId("last");
+    let email = form.getByTestId("email");
+    let password = form.getByTestId("password");
+    let reenterPassword = form.getByTestId("repassword");
+    fireEvent.change(firstName,{
+      target:{
+        value:'John'
+      }
+    })
+    fireEvent.blur(firstName);
+    fireEvent.change(lastName, {
+      target: {
+        value: "Doe",
+      },
+    });
+    fireEvent.blur(lastName);
+    fireEvent.change(email, {
+      target: {
+        value: "john.doe@gmail.com",
+      },
+    });
+    fireEvent.blur(email);
+    fireEvent.change(password, {
+      target: {
+        value: "John.doe8@843",
+      },
+    });
+    fireEvent.blur(password);
+    fireEvent.change(reenterPassword, {
+      target: {
+        value: "John.doe8@843",
+      },
+    });
+    fireEvent.blur(reenterPassword);
+    let submitBtn = form.getByTestId("signup-btn");
+    fireEvent.click(submitBtn);
+    await waitFor(()=>{
+      expect(form.getByText('Facing issue signing up. Please try again later.'))
+    })
+  })
+  
+  test('Show/hide password and re-enter password',()=>{
+    let form = render(
+      <StaticRouter>
+       <SignUp />
+      </StaticRouter>
+    );
+    //Password field
+    let password = form.getByTestId("password");
+    let hidePassword = form.getByTestId('hide-password');
+    expect(hidePassword).toBeInTheDocument();
+    expect(password.type).toBe('password');
+    fireEvent.click(hidePassword);
+    expect(form.queryByTestId('hide-password')).toBeNull();
+    expect(form.queryByTestId('show-password')).not.toBeNull();
+    expect(password.type).toBe('text');
+    fireEvent.click(form.getByTestId('show-password'));
+    expect(form.queryByTestId('show-password')).toBeNull();
+    expect(form.queryByTestId('hide-password')).not.toBeNull();
+    expect(password.type).toBe('password');
+
+
+    //Re-enter password fields
+    let rePassword = form.getByTestId("repassword");
+    let hideRePassword = form.getByTestId('hide-repassword');
+    expect(hideRePassword).toBeInTheDocument();
+    expect(rePassword.type).toBe('password');
+    fireEvent.click(hideRePassword);
+    expect(form.queryByTestId('hide-repassword')).toBeNull();
+    expect(form.queryByTestId('show-repassword')).not.toBeNull();
+    expect(rePassword.type).toBe('text');
+    fireEvent.click(form.getByTestId('show-repassword'));
+    expect(form.queryByTestId('show-repassword')).toBeNull();
+    expect(form.queryByTestId('hide-repassword')).not.toBeNull();
+    expect(rePassword.type).toBe('password');
+  })
 });
