@@ -77,13 +77,14 @@ export default function Search({ searchResults }) {
         />
       </div>
       {showRecommendations && search && (
-        <ul className="recommendation absolute bg-white shadow-md top-6 w-full pt-2 pb-2 border-t-2 border-t-gray-200">
+        <ul className="recommendation absolute bg-white shadow-md top-6 w-full pt-2 pb-2 border-t-2 border-t-gray-200" data-testid="recommendations">
           {recommendations && recommendations.length > 0 ? (
             recommendations.map((restaurant) => (
               <li
                 className="p-2 hover:bg-slate-200 cursor-pointer restaurant-link"
                 key={restaurant.id}
                 onClick={() => goToSearchResult(restaurant.id)}
+                data-testid="recommend-result"
               >
                 {restaurant.name}
               </li>
