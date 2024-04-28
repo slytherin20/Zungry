@@ -13,7 +13,7 @@ export default function RestaurantCard({ details }) {
       : "bg-red-600";
   return (
     <div className="w-52 h-80 border border-gray-200 m-2 p-2 rounded-md">
-      <img src={CLOUDANARY_API + cloudinaryImageId} width="200" height="200" />
+      <img src={CLOUDANARY_API + cloudinaryImageId} width="200" height="200" className="max-h-40" />
       <h3 className="text-lg font-bold text-gray-900">{name}</h3>
       <p className="text-gray-800">{cuisines?.slice(0, 5).join(", ")} </p>
       <div>
